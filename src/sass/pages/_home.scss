@@ -1,0 +1,94 @@
+.navigation{
+    @include flexBetween;
+    padding: 30px $main-padding;
+    // padding: ;
+    &__list{
+        @include liste;
+        @include flexBetween;
+        gap: 26px;
+        
+        
+    }
+}
+.header{
+    background-image: url("/bg1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    border-radius: 40px;
+
+    margin-left: $main-padding;
+    width: calc(100% - $main-padding);
+    position: relative;
+   
+    &::before{
+        @include absolute;
+        background-color: rgba(0, 0, 0, 0.5);
+        // z-index: 1;
+        border-radius: 40px;
+    }
+    &__matiti{
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+    }
+    &__wrapper{
+        z-index: 500;
+        position: relative;
+        color: white;
+        padding: $main-padding;
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 30px;
+        // height: 100%;
+
+    }
+    &__thumbnail{
+        color: $yellow-color;
+        font-size: 20px;
+    }
+    &__title{
+        color: white;
+        font-size: 46px;
+        font-weight: 700;
+        line-height: 1;
+    }
+    &__bigline{
+        position: absolute;
+        width: 180px;
+        background-color: $yellow-color;
+        height: 100%;
+        right: 220px;
+        top: 0;
+    }
+    &__brochette{
+        position: absolute;
+        // width: 200px;
+        // background-color: $yellow-color;
+        height: 70%;
+        right: 80px;
+        // top: 0;
+        bottom: 10px;
+        // bottom: -120px;
+        &::before{
+            position: absolute;
+            content: "";
+            width: 100px;
+            height: 100%;
+            background-color: $yellow-color;
+            // right: 0;
+            top: 0;
+            left: 0;
+            // z-index: -1;
+        }
+    }
+    &__button{
+        display: flex;
+        gap: 20px;
+    }
+}
