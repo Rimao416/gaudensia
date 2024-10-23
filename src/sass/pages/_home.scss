@@ -92,3 +92,158 @@
         gap: 20px;
     }
 }
+.why{
+    padding: 40px $main-padding;
+    @include flexBetween;
+    gap: 20px;
+    // flex-wrap: wrap;
+    &__item{
+
+        background-color: rgba(249, 250, 252, .7);
+        border:1px solid #e2e2e2;
+        // box-shadow: 0 0 10px #YE;
+        // background-color: #f9fafc;
+        display: flex;
+
+        flex-basis: 45%;
+        align-items: center;
+        justify-content: center;
+        // flex-basis: 45%;
+        padding: 25px;
+        border-radius: 20px;
+        gap: 20px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        &:hover{
+            box-shadow: 0px 5px 30px 0px rgba(255, 166, 32, 0.2);
+            // color: white;
+            // box-shadow: 0 0 10px $yellow-color;
+        }
+        h3{
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        p{
+            font-size: 14px;
+            line-height: 1;
+            font-weight: 400;
+        color: #666;       }
+    
+    }
+}
+.daily{
+    padding: $main-padding;
+    background-color: rgba(249, 250, 252, .7);
+
+    &__header{
+        @include flexBetween;
+        h1{
+            font-family: "Lobster";
+            font-size: 42px;
+            line-height: 1;
+            font-weight: 400;
+            color: #222222;
+            text-align: center;
+        }
+    }
+    &__line{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    &__icon{
+        background-color: $yellow-color;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        flex-direction: row;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0px 5px 30px 0px rgba(255, 166, 32, 0.5);
+        &:hover{
+            background-color: black;
+        }
+        svg{
+            width: 25px;
+        height: 25px;
+        color: white;
+        font-weight: bold;
+        }
+        &:hover{
+            box-shadow: 0px 5px 30px 0px rgba(255, 166, 32, 0.2);
+        }
+    }
+    &__wrapper{	
+        margin-top: 20px;
+    }
+    &__item {
+        position: relative;
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        overflow: hidden; // Pour cacher le contenu qui déborde
+        &:hover &--title{
+            color: white;
+        }
+        &--wrapper{
+            z-index: 50;
+        }
+        &--title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+    
+        &--description {
+            font-size: 14px;
+            line-height: 1;
+            font-weight: 400;
+            color: #666;
+            margin-top: 5px;
+        }
+    
+        &--price {
+            font-size: 16px;
+            color: $yellow-color;
+            font-weight: 800;
+            margin-top: 20px;
+        }
+    
+        &--plus {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            background-color: $yellow-color;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            color: white;
+            z-index: 2;
+        }
+    
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: #222; // Couleur de remplissage
+            transform: translateY(100%) translateX(100%); // Démarre en bas à droite
+            transition: transform 0.3s ease; // Transition douce
+            z-index: 0; // En arrière-plan
+        }
+    
+        &:hover::after {
+            transform: translateY(0) translateX(0); // Remplissage vers le haut
+            z-index: -1;
+        }
+    
+        z-index: 1; // Assure que le texte est au-dessus du fond
+    }
+    
+}
