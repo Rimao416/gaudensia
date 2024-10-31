@@ -1,12 +1,19 @@
 // import React from 'react'
-import Logo from "../assets/logo_small.png";
-// import Header_1 from "../assets/header_1.jpg";
-// import Header_2 from "../assets/header_2.jpg";
+
+import { AnimatePresence, motion } from "framer-motion";
+import Testimonials from "../assets/testimonial.png";
 import Matiti from "../assets/pic4.png";
+import Can from "../assets/can.png";
+import Citation from "../assets/citation.png";
+import { BsTiktok } from "react-icons/bs";
+import { FiMail } from "react-icons/fi";
 import Brochette from "../assets/pic1.png";
 import Button from "../components/Button";
 import { MenuCategory, myMenu, WHY_CHOOSE_US } from "../constants/data";
+import Gaudensia from "../assets/gaudensia.png";
 import { FaPlus } from "react-icons/fa6";
+import { MdOutlinePhone } from "react-icons/md";
+
 import { IoArrowBackSharp } from "react-icons/io5";
 import { IoArrowForwardOutline } from "react-icons/io5";
 
@@ -15,14 +22,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay } from "swiper/modules";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { getCategories } from "../slice/categorySlice";
+import { getDishes } from "../slice/dishSlice";
+import { getTestimonials } from "../slice/testimonialSlice";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 
-const menuItems = [
-  { label: "Accueil", link: "#" },
-  { label: "A Propos", link: "#" },
-  { label: "Avantages", link: "#" },
-  { label: "Temoignages", link: "#" },
-];
 const truncateTitle = (title: string | undefined, length: number = 20) => {
   if (title) {
     if (title.length > length) {
@@ -33,9 +40,23 @@ const truncateTitle = (title: string | undefined, length: number = 20) => {
   }
 };
 function Home() {
-  // const imagesHeader = [Header_1, Header_2,
-  // const random_menu=myMenu.categories[Math.floor(Math.random() * myMenu.categories.length)];
-  // console.log(random_menu)
+  const dispatch = useAppDispatch();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Null = Tous
+  useEffect(() => {
+    dispatch(getCategories());
+    dispatch(getDishes());
+    dispatch(getTestimonials());
+  }, [dispatch]);
+  const { categories } = useAppSelector((state) => state.categories);
+  const { dishes } = useAppSelector((state) => state.dishes);
+  const { testimonials } = useAppSelector((state) => state.testimonials);
+  console.log(dishes);
+  const filteredDishes = Array.isArray(dishes)
+    ? selectedCategory
+      ? dishes.filter((dish) => dish.category._id === selectedCategory)
+      : dishes
+    : [];
+  const limitedDishes = filteredDishes.slice(0, 6); // Limiter à 6 plats maximum
 
   const random_menu = useState<MenuCategory>(
     myMenu.categories[Math.floor(Math.random() * myMenu.categories.length)]
@@ -44,33 +65,7 @@ function Home() {
 
   return (
     <div className="app">
-      <section className="navigation">
-        <img src={Logo} alt={Logo} />
-        <div className="navigation__wrapper">
-          <ul className="navigation__list">
-            {menuItems.map((item) => (
-              <li key={item.label}>
-                <a href={item.link}>{item.label}</a>
-              </li>
-            ))}
-          </ul>
-          <span>
-            {/* <svg width="800px" height="800px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" xml:space={"preserve" }xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-
-<g>
-
-<rect fill="#1D1D1B" height="1" width="11" x="0.5" y="5.5"/>
-
-<rect fill="#1D1D1B" height="1" width="11" x="0.5" y="2.5"/>
-
-<rect fill="#1D1D1B" height="1" width="11" x="0.5" y="8.5"/>
-
-</g>
-
-</svg> */}
-          </span>
-        </div>
-      </section>
+      <Navbar />
       <section className="header">
         <div className="header__bigline"></div>
         <img src={Matiti} alt={Matiti} className="header__matiti" />
@@ -102,6 +97,7 @@ function Home() {
         ))}
       </section>
       <section className="daily">
+        {/* <img src={About_Yellow} alt={About_Yellow} className="daily__yellow" /> */}
         <div className="daily__header">
           <h1>Menu Du Jour</h1>
           <div className="daily__line">
@@ -114,37 +110,248 @@ function Home() {
           </div>
         </div>
 
-        <div className="daily__wrapper">
-          <Swiper
-            modules={[Autoplay]}
-            loop
-            slidesPerView={4}
-            spaceBetween={40}
-            speed={2000}
-            autoplay={{
-              delay: 2000,
-              disableOnInteraction: false,
-            }}
-          >
-            {random_menu[0].dishes.map((item, index) => (
-              <SwiperSlide key={index}>
-                <div className="daily__item">
-                  <div className="daily__item--wrapper">
-                    <h4 className="daily__item--title">
-                      {truncateTitle(item.name)}
-                    </h4>
-                    <p className="daily__item--description">
-                      {truncateTitle(item.description)}
-                    </p>
-                  </div>
-                  <p className="daily__item--price">{item.prices[0].price} PNL</p>
+        <Swiper
+          modules={[Autoplay]}
+          loop
+          slidesPerView={4}
+          spaceBetween={40}
+          speed={2000}
+          autoplay={{
+            delay: 2000,
+            disableOnInteraction: false,
+          }}
+          className="daily__wrapper"
+          breakpoints={{
+            320: {
+              slidesPerView: 1,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 4,
+            },
+          }}
+        >
+          {random_menu[0].dishes.map((item, index) => (
+            <SwiperSlide key={index}>
+              <div className="daily__item">
+                <div className="daily__item--wrapper">
+                  <h4 className="daily__item--title">
+                    {truncateTitle(item.name)}
+                  </h4>
+                  <p className="daily__item--description">
+                    {truncateTitle(item.description)}
+                  </p>
                 </div>
-                <span className="daily__item--plus">  <FaPlus /></span>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                <p className="daily__item--price">{item.prices[0].price} PNL</p>
+              </div>
+              <span className="daily__item--plus">
+                {" "}
+                <FaPlus />
+              </span>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </section>
+      <section className="ads">
+        <div className="ads__wrapper">
+          <h1>Bienvenue dans l'univers culinaire de Gaudensia</h1>
+          <p>
+            Dans sa cuisine, elle ne se contente pas de préparer des repas ;
+            elle crée des histoires, des souvenirs et un sentiment
+            d'appartenance. Chaque recette est une invitation à explorer des
+            saveurs inoubliables et à partager des moments précieux autour de la
+            table.
+          </p>
+
+          <Button text="En savoir plus" type="outline" onClick={() => {}} />
+        </div>
+        <div className="ads__wrapper">
+          <img src={Gaudensia} alt={Gaudensia} />
         </div>
       </section>
+      <section className="menu">
+        <div className="menu__header">
+          <h1>Notre Menu</h1>
+
+          <Swiper
+            slidesPerView={5}
+            spaceBetween={10}
+            speed={2000}
+            className="menu__header--wrapper"
+            breakpoints={{
+              320: {
+                slidesPerView: 3,
+              },
+              768: {
+                slidesPerView: 3,
+              },
+              1024: {
+                slidesPerView: 5,
+              },
+            }}
+          >
+            {categories && (
+              <>
+                <SwiperSlide>
+                  <div
+                    className={`menu__header--item ${
+                      selectedCategory === null ? "active" : ""
+                    }`}
+                    onClick={() => setSelectedCategory(null)}
+                  >
+                    Tous
+                  </div>
+                </SwiperSlide>
+
+                {categories.map((item, index) => (
+                  <SwiperSlide key={index + 1}>
+                    <div
+                      className={`menu__header--item ${
+                        selectedCategory === item._id ? "active" : ""
+                      }`}
+                      onClick={() => setSelectedCategory(item._id)}
+                    >
+                      {item.name}
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </>
+            )}
+          </Swiper>
+        </div>
+        <div className="menu__body">
+          <AnimatePresence>
+            {limitedDishes &&
+              limitedDishes.map((item) => (
+                <motion.div className="menu__item" key={item._id} layout>
+                  <div className="menu__item--wrapper">
+                    <h4 className="menu__item--title">{item.name}</h4>
+                    <p className="menu__item--separator">
+                      --------------------
+                    </p>
+                    <p className="menu__item--price">
+                      {item.prices[0].price} PLN
+                    </p>
+                  </div>
+                  <p className="menu__item--description">{item.description}</p>
+                </motion.div>
+              ))}
+          </AnimatePresence>
+        </div>
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <Button
+            text="Voir tous les plats"
+            type="outline"
+            onClick={() => {}}
+          />
+        </div>
+      </section>
+      <section className="testimonials">
+        <img
+          src={Testimonials}
+          alt="testimonials"
+          className="testimonials__image"
+        />
+        <h1 className="testimonials__title">Ce que nos clients disent</h1>
+        <Swiper
+          modules={[Autoplay]}
+          slidesPerView={4}
+          spaceBetween={30}
+          speed={2000}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          className="testimonials__wrapper"
+          breakpoints={{
+            320: {
+              slidesPerView: 1,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 4,
+            },
+          }}
+          
+        >
+          {testimonials &&
+            testimonials.map((item, index) => (
+              <SwiperSlide key={index}>
+                <div className="testimonials__item">
+                  <img
+                    src={Citation}
+                    alt="citation"
+                    className="testimonials__item--image"
+                  />
+                  <div className="testimonials__item--author">
+                    <h4>{item.author}</h4>
+                    <p>{item.mail}</p>
+                  </div>
+                  <p className="testimonials__item--description">
+                    {item.comment}
+                  </p>
+                </div>
+              </SwiperSlide>
+            ))}
+        </Swiper>
+      </section>
+      <section className="contact">
+        <img src={Can} alt="can" className="contact__image" />
+        <div className="contact__body">
+          <div className="contact__body--wrapper">
+            <div className="contact__body--header">
+              <h1 className="contact__body--title">Donnez nous votre avis</h1>
+              <p className="contact__body--description">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Consequatur corrupti esse illo itaque id necessitatibus at ex
+                quasi ea voluptates adipisci quam excepturi ut rerum, delectus
+                corporis, expedita nisi tenetur!
+              </p>
+            </div>
+            <div className="contact__body--form">
+              <form className="contact__form">
+                <div className="contact__form--wrapper">
+                  <input type="text" placeholder="Nom" />
+                  <input type="email" placeholder="Email" />
+                </div>
+                <textarea placeholder="Message"></textarea>
+                <Button text="Envoyer" type="outline" onClick={() => {}} />
+              </form>
+            </div>
+          </div>
+          <div className="contact__body--wrapper">
+            <div className="contact__body--title">
+              <h1>Contat Info</h1>
+              <p>Lorem ipsum dolor sit amet consectetur </p>
+            </div>
+            <div className="contact__body--info">
+              <div className="contact__body--info--wrapper">
+                <div className="contact__body--icon">
+                  <FiMail />
+                </div>
+                <p>gmcuisinepl@gmail.com</p>
+              </div>
+              <div className="contact__body--info--wrapper">
+                <div className="contact__body--icon">
+                  <BsTiktok />
+                </div>
+                <p>The Passion Cuisine</p>
+              </div>
+              <div className="contact__body--info--wrapper">
+                <div className="contact__body--icon">
+                  <MdOutlinePhone />
+                </div>
+                <p>+48515421319</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <Footer />
     </div>
   );
 }

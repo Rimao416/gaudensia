@@ -1,0 +1,101 @@
+.footer {
+    margin: 16px 40px 0 40px;
+    border-radius: 16px;
+    background-color: #0a0a0a;
+    color: #fff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    font-size: 14px !important;
+    @include responsive('mobile'){
+        margin :16px 20px 0 20px;
+        padding: 20px;
+    }
+    &__wrapper{
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        
+        }
+    &__header{
+        @include flexBetween;
+        align-items: flex-end;
+    }
+  
+    &__container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      @include responsive('mobile'){
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  
+    &__column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    &__title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ccc;
+    }
+  
+    &__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      color: #878787;
+    }
+  
+    &__item {
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.3s;
+  
+      &:hover {
+        color: #ccc;
+      }
+    }
+  
+    &__social {
+      grid-column: span 5;
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+    //   fill: red;
+    }
+  
+    &__icon {
+      font-size: 20px;
+      cursor: pointer;
+      transition: color 0.3s;
+      color: #878787;
+  
+      &:hover {
+        color: #1da1f2; // Example Twitter color
+      }
+    }
+  
+    &__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #333;
+      padding-top: 10px;
+      font-size: 14px;
+      
+    }
+  
+  
+    &__copyright {
+      font-size: 12px;
+    }
+  }
+  
