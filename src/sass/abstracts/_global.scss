@@ -1,4 +1,4 @@
-.button{
+.button, .link{
     outline: none;
     border: none;
     padding: 10px 20px;
@@ -7,6 +7,10 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0px 5px 30px 0px rgba(254,159,16,.2);
+    a{
+        color: inherit;
+        text-decoration: none;
+    }
 &__outline{
     background-color: $yellow-color;
     border-color: $yellow-color;
@@ -26,4 +30,9 @@
 
 
 
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
 }

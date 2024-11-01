@@ -13,7 +13,8 @@ import { MenuCategory, myMenu, WHY_CHOOSE_US } from "../constants/data";
 import Gaudensia from "../assets/gaudensia.png";
 import { FaPlus } from "react-icons/fa6";
 import { MdOutlinePhone } from "react-icons/md";
-
+import About from "../assets/about.png";
+import Dishe from "../assets/restaurants-wrap-bg.png";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { IoArrowForwardOutline } from "react-icons/io5";
 
@@ -21,14 +22,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-import { Autoplay } from "swiper/modules";
-import { useEffect, useState } from "react";
+import { Autoplay, Navigation } from "swiper/modules";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getCategories } from "../slice/categorySlice";
 import { getDishes } from "../slice/dishSlice";
 import { getTestimonials } from "../slice/testimonialSlice";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import type { Swiper as SwiperCore } from "swiper"; // Import du type Swiper
+import { Link } from "react-router-dom";
+import Lien from "../components/Lien";
 
 const truncateTitle = (title: string | undefined, length: number = 20) => {
   if (title) {
@@ -41,6 +45,8 @@ const truncateTitle = (title: string | undefined, length: number = 20) => {
 };
 function Home() {
   const dispatch = useAppDispatch();
+  const swiperRef = useRef<SwiperCore | null>(null); // Définir le type de swiperRef
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Null = Tous
   useEffect(() => {
     dispatch(getCategories());
@@ -79,8 +85,9 @@ function Home() {
             alliant saveurs uniques et moments de partage inoubliables.
           </p>
           <div className="header__button">
-            <Button text="Reserver" type="outline" onClick={() => {}} />
-            <Button text="En savoir plus" type="inline" onClick={() => {}} />
+            <Lien to="/a-propos" type="outline" redirection={"À Propos de nous"} />
+            <Lien to="/contact" type="inline" redirection={"Nous Contacter"} />
+           
           </div>
         </div>
         <img src={Brochette} alt={Brochette} className="header__brochette" />
@@ -97,21 +104,30 @@ function Home() {
         ))}
       </section>
       <section className="daily">
-        {/* <img src={About_Yellow} alt={About_Yellow} className="daily__yellow" /> */}
+        <img src={About} alt={About} className="daily__yellow" />
         <div className="daily__header">
           <h1>Menu Du Jour</h1>
           <div className="daily__line">
-            <span className="daily__icon">
+            <span
+              className="daily__icon daily__prev"
+              onClick={() => swiperRef.current?.slidePrev()}
+            >
               <IoArrowBackSharp />
             </span>
-            <span className="daily__icon">
+            <span
+              className="daily__icon daily__next"
+              onClick={() => swiperRef.current?.slideNext()}
+            >
               <IoArrowForwardOutline />
             </span>
           </div>
         </div>
 
         <Swiper
-          modules={[Autoplay]}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          modules={[Autoplay, Navigation]}
           loop
           slidesPerView={4}
           spaceBetween={40}
@@ -165,13 +181,16 @@ function Home() {
             table.
           </p>
 
-          <Button text="En savoir plus" type="outline" onClick={() => {}} />
+          <Button type="outline" onClick={() => {}}>
+            <Link to="/a-propos">En Savoir Plus</Link>
+          </Button>
         </div>
         <div className="ads__wrapper">
           <img src={Gaudensia} alt={Gaudensia} />
         </div>
       </section>
       <section className="menu">
+        <img src={Dishe} alt={Dishe} className="menu__yellow" />
         <div className="menu__header">
           <h1>Notre Menu</h1>
 
@@ -241,11 +260,9 @@ function Home() {
           </AnimatePresence>
         </div>
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <Button
-            text="Voir tous les plats"
-            type="outline"
-            onClick={() => {}}
-          />
+          <Button type="outline" onClick={() => {}}>
+            <Link to="/menu">Voir tous nos plats</Link>
+          </Button>
         </div>
       </section>
       <section className="testimonials">
@@ -276,7 +293,6 @@ function Home() {
               slidesPerView: 4,
             },
           }}
-          
         >
           {testimonials &&
             testimonials.map((item, index) => (
@@ -319,7 +335,9 @@ function Home() {
                   <input type="email" placeholder="Email" />
                 </div>
                 <textarea placeholder="Message"></textarea>
-                <Button text="Envoyer" type="outline" onClick={() => {}} />
+                <Button type="outline" onClick={() => {}} genre="submit">
+                  Envoyer
+                </Button>
               </form>
             </div>
           </div>

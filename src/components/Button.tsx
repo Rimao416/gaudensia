@@ -1,14 +1,15 @@
 interface ButtonProps {
-    text: string
-    type:string
-    onClick: () => void
+  type: string;
+  onClick: () => void;
+  children: React.ReactNode;
+  genre?: "button" | "submit";
 }
-function Button({ text,type, onClick }: ButtonProps) {
+function Button({ type, onClick, children, genre = "button" }: ButtonProps) {
   return (
-    <button className={`button button__${type}`} onClick={onClick}>
-      {text}
+    <button className={`button button__${type}`} onClick={onClick} type={genre}>
+      {children}
     </button>
-  )
+  );
 }
 
-export default Button
+export default Button;
