@@ -5,26 +5,21 @@
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
-    border-radius: 40px;
 
-    margin-left: $main-padding;
-    width: calc(100% - $main-padding);
+    // margin-left: $main-padding;
+    // width: calc(100% - $main-padding);
+    width: 100%;
     position: relative;
+
     
    
     &::before{
         @include absolute;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.6);
         // z-index: 1;
         border-radius: 40px;
     }
-    &__matiti{
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 2;
-    }
+   
     &__wrapper{
         z-index: 500;
         position: relative;
@@ -48,14 +43,14 @@
         font-weight: 700;
         line-height: 1;
     }
-    &__bigline{
-        position: absolute;
-        width: 180px;
-        background-color: $yellow-color;
-        height: 100%;
-        right: 220px;
-        top: 0;
-    }
+    // &__bigline{
+    //     position: absolute;
+    //     width: 180px;
+    //     background-color: $yellow-color;
+    //     height: 100%;
+    //     right: 220px;
+    //     top: 0;
+    // }
     &__brochette{
         position: absolute;
         // width: 200px;

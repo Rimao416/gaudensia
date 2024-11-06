@@ -1,6 +1,18 @@
 .navigation{
     @include flexBetween;
-    padding: 20px $main-padding;
+    padding: 10px $main-padding;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    &--scrolled{
+        background-color: white;
+        z-index: 999;
+        box-shadow: 0px 5px 30px 0px rgba(254,159,16,.2);
+
+    }
+    
     @include responsive('mobile'){
         padding: 20px $respo-padding;
     }
@@ -11,11 +23,24 @@
         @include flexBetween;
         gap: 26px;
         a{
+
+            color: white;
+            font-weight: 500;
             transition: all 0.3s ease;
             
             &:hover{
                 color: $yellow-color;
             }
+            &.scrolled-link{
+                color: black;
+            }
+            &.default-link{
+                color: white;
+            }
+            &.active{
+                color: $yellow-color !important;
+            }
+
         }
         
         
@@ -59,9 +84,7 @@
         font-size: 12px;
         color: white;
     }
-    .active{
-        color: $yellow-color;
-    }
+   
     &__toggle{
         width: 45px;
         height: 45px;
@@ -124,8 +147,42 @@ display: none;
     }
 }
 
+
+
 .overlay {
     @include overlay;
+    &__title{
+        text-align: center;
+        font-size: 24px;
+        color: #222;
+    }
+    &__text{
+        color: #666;
+        font-size: 12px;
+    }
+    &__info{
+        margin-top: 14px;
+        color: #666;
+        font-size: 12px;
+        margin-bottom: 14px;
+    }
+    &__form{
+        margin-top: 26px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: auto;
+        input{
+            width: 100%;
+            padding: 10px 20px;
+            border: 1px solid #e2e2e2;
+            border-radius: 5px;
+            &:focus{
+                outline:$yellow-color 1px solid;
+            }
+        }
+    }
   }
   
   .overlay__content {
@@ -137,9 +194,24 @@ display: none;
     max-width: 400px;
     text-align: center;
     position: absolute;
-    top: 0;
-    right: 0;
-    height: 100vh;
+    &__right{
+        top: 0;
+        right: 0;
+        height: 100vh;
+
+    }
+    &__center{
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+       @include responsive('mobile'){
+        position: absolute;
+           bottom: 0;
+           transform: translateX(-50%);
+       }
+        // top: 0;
+
+    }
 
   }
   

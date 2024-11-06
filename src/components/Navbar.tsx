@@ -1,31 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../assets/logo_small.png";
+import Logo_White from "../assets/logo_small_white.png";
 import { NavLink, useLocation } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import Button from "./Button";
 import { motion } from "framer-motion";
 import { useOverlay } from "../context/useOverlay";
+import CartUser from "./CartUser";
+import { useAuthOverlay } from "../context/useAuthOverlay";
+import Auth from "./Auth";
 
 function Navbar() {
   const location = useLocation();
   const { isOverlayVisible, setOverlayVisible } = useOverlay();
+  const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();
   const [isOpen, setIsOpen] = useState(false);
   const [card, setCard] = useState(0);
-
+  const authModalOpen = () => {
+    setOverlayVisible(false);
+    setAuthOverlayVisible(true);
+  };
   // Fonction de bascule du menu
   const toggleMenu = () => setIsOpen(!isOpen);
+  const [isScrolled, setIsScrolled] = useState(true);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
 
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   const menuItems = [
     { label: "Accueil", link: "/" },
     { label: "A Propos", link: "/a-propos" },
-    { label: "Menu", link: "/avantages" },
+    { label: "Menu", link: "/menu" },
     { label: "Avis", link: "/temoignages" },
     { label: "Contact", link: "/contact" },
   ];
 
   return (
-    <section className="navigation">
-      <img src={Logo} alt="Logo" />
+    <section
+      className={`navigation ${isScrolled ? "navigation--scrolled" : ""}`}
+    >
+      <img src={isScrolled ? Logo : Logo_White} alt="Logo" />
       <div className="navigation__wrapper">
         <ul className="navigation__list">
           {menuItems.map((item) => (
@@ -33,9 +55,12 @@ function Navbar() {
               <NavLink
                 to={item.link}
                 className={({ isActive }) =>
-                  isActive || (location.pathname === "/" && item.link === "/")
-                    ? "active"
-                    : ""
+                  `${
+                    isActive || (location.pathname === "/" && item.link === "/")
+                      ? "active "
+                      : ""
+                  }
+                  ${isScrolled ? "scrolled-link" : "default-link"}`
                 }
               >
                 {item.label}
@@ -44,7 +69,7 @@ function Navbar() {
           ))}
         </ul>
         <div className="navigation__icons">
-          <Button type="inline" onClick={() => setOverlayVisible(false)}>
+          <Button type="inline" onClick={authModalOpen}>
             Connexion
           </Button>
           <span
@@ -109,56 +134,8 @@ function Navbar() {
       </div>
 
       {/* Overlay */}
-      {isOverlayVisible && (
-        <div className="overlay">
-          <div className="overlay__content">
-            <button
-              className="overlay__close"
-              onClick={() => setOverlayVisible(false)}
-            >
-              &times;
-            </button>
-
-            {card === 0 ? (
-              <h1
-                style={{
-                  textAlign: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                Votre panier est vide
-              </h1>
-            ) : (
-              <>
-                <h2>Welcome Back</h2>
-                <p>
-                  We'd love to have you join our network of creators &
-                  freelancers.
-                </p>
-                <button className="overlay__google-button">
-                  Sign Up with Google
-                </button>
-                <div className="overlay__divider">OR</div>
-                <form>
-                  <label>Email*</label>
-                  <input type="email" placeholder="Enter Your Email" required />
-                  <label>Password*</label>
-                  <input
-                    type="password"
-                    placeholder="Enter a Password"
-                    required
-                  />
-                  <button type="submit" className="overlay__submit">
-                    Sign In
-                  </button>
-                </form>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+      {isOverlayVisible && <CartUser />}
+      {isAuthOverlayVisible && <Auth />}
     </section>
   );
 }

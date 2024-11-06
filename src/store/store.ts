@@ -3,12 +3,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import categorySlice from "../slice/categorySlice";
 import dishSlice from "../slice/dishSlice";
 import testimonialSlice from "../slice/testimonialSlice";
-
+import authSlice from "../slice/authSlice"
 export const store = configureStore({
   reducer: {
     categories: categorySlice,
     dishes: dishSlice,
     testimonials: testimonialSlice,
+    auth: authSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
