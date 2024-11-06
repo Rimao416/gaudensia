@@ -36,3 +36,12 @@ a{
     text-decoration: none;
     color: inherit;
 }
+
+.input-error{
+    border-color:red !important;
+}
+.error-text{
+    color:red !important;
+    font-size: 14px;
+    text-align: left;
+}

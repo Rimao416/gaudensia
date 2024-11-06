@@ -1,17 +1,32 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { API } from "../config";
 import { user } from "../interface/user";
 
 interface AuthState {
   user: user | null;
   loading: boolean;
-  error: string | null;
+  errors: {
+    [key: string]: string | null;
+  } | null;
 }
 
 const initialState: AuthState = {
-  user: null,
+  user: {
+    _id: "",
+    fullName: "SAKUY",
+    email: "",
+    password: "",
+    address: "",
+    phoneNumber: "",
+    token: "",
+  },
   loading: false,
-  error: null,
+  errors: {
+    email: "",
+    password: "",
+    address: "",
+    phoneNumber: "",
+  },
 };
 
 export const sign = createAsyncThunk<user, user>(
@@ -29,22 +44,31 @@ export const sign = createAsyncThunk<user, user>(
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setCredentials: (state, action: PayloadAction<Partial<user>>) => {
+      state.user = { ...state.user, ...action.payload } as user;
+    },
+    setErrors: (state, action: PayloadAction<{ [key: string]: string | null }>) => {
+      state.errors = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(sign.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        // state.error = null;
       })
       .addCase(sign.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
       })
-      .addCase(sign.rejected, (state, action) => {
+      .addCase(sign.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message || "Something went wrong";
+        // state.error = action.error.message || "Something went wrong";
       });
   },
 });
+
+export const { setCredentials, setErrors } = authSlice.actions;
 
 export default authSlice.reducer;

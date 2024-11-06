@@ -1,14 +1,11 @@
 
-import { useEffect } from "react";
+
 import Button from "../components/Button";
 import { useAuthOverlay } from "../context/useAuthOverlay";
 
 function Login() {
   const { setType, type } = useAuthOverlay();
-  useEffect(() => {
-    console.log("Tu viens de changer le type",type);
-  }, [type]);
-  console.log(type);
+
   return (
     <>
       <h1 className="overlay__title" onClick={() => setType("sign")}>Connexion</h1>
