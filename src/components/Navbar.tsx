@@ -15,7 +15,7 @@ function Navbar() {
   const { isOverlayVisible, setOverlayVisible } = useOverlay();
   const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();
   const [isOpen, setIsOpen] = useState(false);
-  const [card, setCard] = useState(0);
+
   const authModalOpen = () => {
     setOverlayVisible(false);
     setAuthOverlayVisible(true);
@@ -76,7 +76,7 @@ function Navbar() {
             className="navigation__icon"
             onClick={() => setOverlayVisible(true)}
           >
-            <p className="navigation__counter">{card}</p>
+            <p className="navigation__counter">0</p>
             <FaShoppingCart />
           </span>
         </div>

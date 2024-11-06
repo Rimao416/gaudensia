@@ -7,6 +7,7 @@ import { store } from "./store/store.ts";
 import { Provider } from "react-redux";
 import { OverlayProvider } from "./context/OverlayContext";
 import { AuthOverlayProvider } from "./context/AuthOverlayContext.tsx";
+import 'react-phone-number-input/style.css'
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

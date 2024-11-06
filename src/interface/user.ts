@@ -4,6 +4,6 @@ export interface user {
   email: string;
   password: string;
   address: string;
-  phone: string;
+  phoneNumber: string;
   token: string;
 }
