@@ -9,6 +9,7 @@ import { useOverlay } from "../context/useOverlay";
 import CartUser from "./CartUser";
 import { useAuthOverlay } from "../context/useAuthOverlay";
 import Auth from "./Auth";
+import MessageDisplay from "./MessageDisplay";
 
 function Navbar() {
   const location = useLocation();
@@ -44,85 +45,25 @@ function Navbar() {
   ];
 
   return (
-    <section
-      className={`navigation ${isScrolled ? "navigation--scrolled" : ""}`}
-    >
-      <img src={isScrolled ? Logo : Logo_White} alt="Logo" />
-      <div className="navigation__wrapper">
-        <ul className="navigation__list">
-          {menuItems.map((item) => (
-            <li key={item.label}>
-              <NavLink
-                to={item.link}
-                className={({ isActive }) =>
-                  `${
-                    isActive || (location.pathname === "/" && item.link === "/")
-                      ? "active "
-                      : ""
-                  }
-                  ${isScrolled ? "scrolled-link" : "default-link"}`
-                }
-              >
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-        <div className="navigation__icons">
-          <Button type="inline" onClick={authModalOpen}>
-            Connexion
-          </Button>
-          <span
-            className="navigation__icon"
-            onClick={() => setOverlayVisible(true)}
-          >
-            <p className="navigation__counter">0</p>
-            <FaShoppingCart />
-          </span>
-        </div>
-      </div>
-
-      {/* Icône du menu burger */}
-      <motion.div className="navigation__toggle" onClick={toggleMenu}>
-        <motion.span
-          animate={{
-            rotate: isOpen ? 45 : 0,
-            y: isOpen ? 8 : 0,
-          }}
-          transition={{ duration: 0.1 }}
-        />
-
-        <motion.span
-          animate={{
-            transform: !isOpen ? "translateX(0)" : "translateX(20px)",
-            opacity: isOpen ? 0 : 1,
-          }}
-          transition={{ duration: 0.1 }}
-        />
-
-        <motion.span
-          animate={{
-            rotate: isOpen ? -45 : 0,
-            y: isOpen ? -8 : 0,
-          }}
-          transition={{ duration: 0.1 }}
-          style={isOpen ? { width: "100%" } : {}}
-        />
-      </motion.div>
-
-      {/* Menu déroulant pour le mobile */}
-      <div className={`navigation__dropdown ${isOpen ? "open" : ""}`}>
-        <div className="navigation__dropdown--wrapper">
-          <img src={Logo} alt="Logo" />
-          <ul className="navigation__dropdown--list">
+    <>
+      <section
+        className={`navigation ${isScrolled ? "navigation--scrolled" : ""}`}
+      >
+        <img src={isScrolled ? Logo : Logo_White} alt="Logo" />
+        <div className="navigation__wrapper">
+          <ul className="navigation__list">
             {menuItems.map((item) => (
               <li key={item.label}>
                 <NavLink
                   to={item.link}
                   className={({ isActive }) =>
-                    isActive || (location.pathname === "/" && item.link === "/")
-                      ? "active"
-                      : ""
+                    `${
+                      isActive ||
+                      (location.pathname === "/" && item.link === "/")
+                        ? "active "
+                        : ""
+                    }
+                  ${isScrolled ? "scrolled-link" : "default-link"}`
                   }
                 >
                   {item.label}
@@ -130,13 +71,79 @@ function Navbar() {
               </li>
             ))}
           </ul>
+          <div className="navigation__icons">
+            <Button type="inline" onClick={authModalOpen}>
+              Connexion
+            </Button>
+            <span
+              className="navigation__icon"
+              onClick={() => setOverlayVisible(true)}
+            >
+              <p className="navigation__counter">0</p>
+              <FaShoppingCart />
+            </span>
+          </div>
         </div>
-      </div>
 
-      {/* Overlay */}
-      {isOverlayVisible && <CartUser />}
-      {isAuthOverlayVisible && <Auth />}
-    </section>
+        {/* Icône du menu burger */}
+        <motion.div className="navigation__toggle" onClick={toggleMenu}>
+          <motion.span
+            animate={{
+              rotate: isOpen ? 45 : 0,
+              y: isOpen ? 8 : 0,
+            }}
+            transition={{ duration: 0.1 }}
+          />
+
+          <motion.span
+            animate={{
+              transform: !isOpen ? "translateX(0)" : "translateX(20px)",
+              opacity: isOpen ? 0 : 1,
+            }}
+            transition={{ duration: 0.1 }}
+          />
+
+          <motion.span
+            animate={{
+              rotate: isOpen ? -45 : 0,
+              y: isOpen ? -8 : 0,
+            }}
+            transition={{ duration: 0.1 }}
+            style={isOpen ? { width: "100%" } : {}}
+          />
+        </motion.div>
+
+        {/* Menu déroulant pour le mobile */}
+        <div className={`navigation__dropdown ${isOpen ? "open" : ""}`}>
+          <div className="navigation__dropdown--wrapper">
+            <img src={Logo} alt="Logo" />
+            <ul className="navigation__dropdown--list">
+              {menuItems.map((item) => (
+                <li key={item.label}>
+                  <NavLink
+                    to={item.link}
+                    className={({ isActive }) =>
+                      isActive ||
+                      (location.pathname === "/" && item.link === "/")
+                        ? "active"
+                        : ""
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Overlay */}
+        {isOverlayVisible && <CartUser />}
+        {isAuthOverlayVisible && <Auth />}
+      </section>
+
+      <MessageDisplay />
+    </>
   );
 }
 

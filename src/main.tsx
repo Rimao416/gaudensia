@@ -7,7 +7,8 @@ import { store } from "./store/store.ts";
 import { Provider } from "react-redux";
 import { OverlayProvider } from "./context/OverlayContext";
 import { AuthOverlayProvider } from "./context/AuthOverlayContext.tsx";
-import 'react-phone-number-input/style.css'
+import "react-phone-number-input/style.css";
+import { MessageProvider } from "./context/NotificationContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Provider store={store}>
         <AuthOverlayProvider>
           <OverlayProvider>
-            <App />
+            <MessageProvider>
+              <App />
+            </MessageProvider>
           </OverlayProvider>
         </AuthOverlayProvider>
       </Provider>

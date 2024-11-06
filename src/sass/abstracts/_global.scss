@@ -45,3 +45,26 @@ a{
     font-size: 14px;
     text-align: left;
 }
+
+.notifications {
+    position: absolute;
+    top: $main-padding;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    z-index: 5000;
+    opacity: 0; /* Initialement transparent */
+    transform: translateY(-20px); /* Position initiale légèrement décalée vers le haut */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Animation sur l'opacité et le déplacement */
+  
+    &__message {
+      color: white;
+      font-size: 14px;
+    }
+  
+    &.show {
+      opacity: 1; /* Rendre visible */
+      transform: translateY(0); /* Revenir à la position d'origine */
+    }
+  }
+  

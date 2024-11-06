@@ -29,11 +29,11 @@ const initialState: AuthState = {
   },
 };
 
-export const sign = createAsyncThunk<user, user>(
+export const sign = createAsyncThunk<user, Partial<user>>(
   "auth/sign",
   async (user, thunkAPI) => {
     try {
-      const response = await API.post("/auth/signup", user);
+      const response = await API.post("/auth/sign", user);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);

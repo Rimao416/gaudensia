@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PhoneInput from "react-phone-number-input";
 import Joi from "joi";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { setCredentials, setErrors } from "../slice/authSlice";
+import { setCredentials, setErrors, sign } from "../slice/authSlice";
 
 // Schéma de validation
 const validationSchema = Joi.object({
@@ -17,11 +17,11 @@ const validationSchema = Joi.object({
       "string.email": "Email invalide",
       "string.empty": "L'email est requis",
     }),
-  phoneNumber: Joi.string()
-    .pattern(/^[0-9]{10}$/)
-    .messages({
-      "string.pattern.base": "Numéro de téléphone invalide",
-    }),
+  phoneNumber: Joi.string(),
+  // .pattern(/^[0-9]{10}$/)
+  // .messages({
+  //   "string.pattern.base": "Numéro de téléphone invalide",
+  // }),
   password: Joi.string().min(6).required().messages({
     "string.empty": "Le mot de passe est requis",
     "string.min": "Le mot de passe doit comporter au moins 6 caractères",
@@ -34,6 +34,35 @@ function Sign() {
   const { fullName, email, phoneNumber, password, address } =
     useAppSelector((state) => state.auth.user) ?? {};
   const { errors } = useAppSelector((state) => state.auth);
+
+  const handleGetCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const geocodeAPI = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+
+          try {
+            const response = await fetch(geocodeAPI);
+            const data = await response.json();
+            const userAddress = data.display_name;
+            dispatch(setCredentials({ address: userAddress }));
+          } catch (error) {
+            console.error(
+              "Erreur lors de la récupération de l'adresse:",
+              error
+            );
+          }
+        },
+        (error) => {
+          console.error("Erreur de géolocalisation:", error);
+          alert("Impossible de récupérer votre position.");
+        }
+      );
+    } else {
+      alert("La géolocalisation n'est pas supportée par votre navigateur.");
+    }
+  };
 
   //   const [errors, setErrors] = useState<{ [key: string]: string | null }>({});
   const [showErrors, setShowErrors] = useState<{ [key: string]: boolean }>({});
@@ -74,13 +103,18 @@ function Sign() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (handleValidation()) {
-      console.log("Données soumises :", {
-        fullName,
-        email,
-        phoneNumber,
-        password,
-        address,
-      });
+      const response = dispatch(
+        sign({
+          fullName: fullName || "", // Utilise une chaîne vide si fullName est undefined
+          email: email || "",
+          phoneNumber: phoneNumber || "",
+          password: password || "",
+          address: address || "",
+        })
+      );
+      if (sign.fulfilled.match(response)) {
+        console.log("Salut les amis");
+      }
     }
   };
 
@@ -137,15 +171,13 @@ function Sign() {
             onChange={(e) => handleChange("address", e.target.value)}
           />
           <p
-            style={{ color: "blue", fontSize: "12px", textAlign: "left" }}
-            onClick={() =>
-              navigator.geolocation.getCurrentPosition((position) =>
-                handleChange(
-                  "address",
-                  `${position.coords.latitude}, ${position.coords.longitude}`
-                )
-              )
-            }
+            style={{
+              color: "blue",
+              fontSize: "12px",
+              textAlign: "left",
+              cursor: "pointer",
+            }}
+            onClick={handleGetCurrentLocation}
           >
             Utiliser ma position{" "}
           </p>
