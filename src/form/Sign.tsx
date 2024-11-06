@@ -4,7 +4,7 @@ import Button from "../components/Button";
 function Sign() {
   return (
     <>
-      <h1 className="overlay__title">Connexion</h1>
+      <h1 className="overlay__title">Inscription</h1>
       <p className="overlay__text">Commnencez à vous connecter</p>
       <form className="overlay__form">
         <input type="mail" placeholder="E-mail" className="overlay__input" />
