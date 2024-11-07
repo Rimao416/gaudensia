@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import PhoneInput from "react-phone-number-input";
 import Joi from "joi";
+import Cookies from "js-cookie"
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setCredentials, setErrors, sign } from "../slice/authSlice";
-
+import { useMessages } from "../context/useMessage";
+import { useAuthOverlay } from "../context/useAuthOverlay";
 // Schéma de validation
 const validationSchema = Joi.object({
   fullName: Joi.string().min(3).required().messages({
@@ -30,7 +32,9 @@ const validationSchema = Joi.object({
 });
 
 function Sign() {
+  const { setMessage } = useMessages();
   const dispatch = useAppDispatch();
+  const { setAuthOverlayVisible } = useAuthOverlay();
   const { fullName, email, phoneNumber, password, address } =
     useAppSelector((state) => state.auth.user) ?? {};
   const { errors } = useAppSelector((state) => state.auth);
@@ -103,7 +107,7 @@ function Sign() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (handleValidation()) {
-      const response = dispatch(
+      const response = await dispatch(
         sign({
           fullName: fullName || "", // Utilise une chaîne vide si fullName est undefined
           email: email || "",
@@ -113,7 +117,9 @@ function Sign() {
         })
       );
       if (sign.fulfilled.match(response)) {
-        console.log("Salut les amis");
+        setMessage("Utilisateur enregistré avec succès", "success");
+        setAuthOverlayVisible(false);
+        // Cookies.set("token", response.payload.token);
       }
     }
   };

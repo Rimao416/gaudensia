@@ -1,5 +1,5 @@
 interface ButtonProps {
-  type: string;
+  type: "inline"|"outline";
   onClick: () => void;
   children: React.ReactNode;
   genre?: "button" | "submit";

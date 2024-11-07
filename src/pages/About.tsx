@@ -22,7 +22,7 @@ function About() {
             <h1>Bienvenue chez Gaudensia</h1>
             <p>
               Découvrez des saveurs inoubliables à travers des meilleurs plats à
-              GM CUISINE,  un restaurant en ligne où nous explorons nos méthodes
+              GM CUISINE, un restaurant en ligne où nous explorons nos méthodes
               de cuisine uniques, où chaque plat est préparé avec passion et
               dévouement, pour offrir à nos clients une expérience culinaire
               exceptionnelle

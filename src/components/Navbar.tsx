@@ -10,12 +10,14 @@ import CartUser from "./CartUser";
 import { useAuthOverlay } from "../context/useAuthOverlay";
 import Auth from "./Auth";
 import MessageDisplay from "./MessageDisplay";
+import { useAppSelector } from "../store/store";
 
 function Navbar() {
   const location = useLocation();
   const { isOverlayVisible, setOverlayVisible } = useOverlay();
   const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();
   const [isOpen, setIsOpen] = useState(false);
+  const user = useAppSelector((state) => state.auth.user);
 
   const authModalOpen = () => {
     setOverlayVisible(false);
@@ -72,9 +74,15 @@ function Navbar() {
             ))}
           </ul>
           <div className="navigation__icons">
+            {user ? (
+              <p>Bonjour {user.fullName}</p>
+            ):
+            <>
             <Button type="inline" onClick={authModalOpen}>
               Connexion
             </Button>
+            </>
+            }
             <span
               className="navigation__icon"
               onClick={() => setOverlayVisible(true)}

@@ -53,9 +53,9 @@ a{
     padding: 8px;
     margin-bottom: 10px;
     z-index: 5000;
-    opacity: 0; /* Initialement transparent */
-    transform: translateY(-20px); /* Position initiale légèrement décalée vers le haut */
-    transition: opacity 0.5s ease, transform 0.5s ease; /* Animation sur l'opacité et le déplacement */
+    opacity: 0; /* Initialement invisible */
+    transform: translateY(-20px); /* Déplacement vers le haut */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Transition sur l'opacité et le déplacement */
   
     &__message {
       color: white;
@@ -67,4 +67,3 @@ a{
       transform: translateY(0); /* Revenir à la position d'origine */
     }
   }
-  

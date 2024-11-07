@@ -4,20 +4,23 @@ import { useMessages } from "../context/useMessage";
 const MessageDisplay: React.FC = () => {
   const { message, type, setMessage } = useMessages();
   const [isVisible, setIsVisible] = useState(false); // Gestion de la visibilité du message
-  console.log("Je suis appelé");
 
   useEffect(() => {
-    console.log("Je suis l'appel du useEffect");
-
     if (message) {
       setIsVisible(true); // Affiche le message
 
       const timeoutId = setTimeout(() => {
-        setIsVisible(false); // Cache le message après 5 secondes
-        setMessage(null, type); // Retirer le message
-      }, 5000);
+        setIsVisible(false); // Cache le message avec un délai avant de l'enlever
+      }, 4500); // Attendre que l'animation soit terminée avant de cacher le message
 
-      return () => clearTimeout(timeoutId);
+      const removeMessageTimeoutId = setTimeout(() => {
+        setMessage(null, type); // Retirer le message après la transition
+      }, 5000); // Retirer après 5 secondes pour garantir que l'animation soit complète
+
+      return () => {
+        clearTimeout(timeoutId);
+        clearTimeout(removeMessageTimeoutId);
+      };
     }
   }, [message, setMessage, type]);
 
