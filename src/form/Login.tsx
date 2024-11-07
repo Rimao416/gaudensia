@@ -1,11 +1,15 @@
 import { useState } from "react";
+import { IoClose } from "react-icons/io5";
 
-import { useAuthOverlay } from "../context/useAuthOverlay";
+
 import { useAppDispatch } from "../store/store";
 import { login } from "../slice/authSlice";
-
+import { useMessages } from "../context/useMessage";
+import { useAuthOverlay } from "../context/useAuthOverlay";
 function Login() {
   const dispatch = useAppDispatch();
+  const { setAuthOverlayVisible } = useAuthOverlay();
+  const { setMessage } = useMessages();
   const { setType, type } = useAuthOverlay();
   const [credentials, setCredentials] = useState({
     email: "",
@@ -16,13 +20,21 @@ function Login() {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit =async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(login(credentials));
+    const response=await dispatch(login(credentials));
+    if(login.fulfilled.match(response)) {
+      setMessage("Utilisateur connecté avec succès", "success");
+      setAuthOverlayVisible(false);
+      
+    }
   };
 
   return (
     <>
+    <div className="overlay__close" onClick={()=>setAuthOverlayVisible(false)}>
+      <span><IoClose /></span>
+    </div>
       <h1 className="overlay__title" onClick={() => setType("sign")}>
         Connexion
       </h1>

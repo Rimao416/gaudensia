@@ -118,6 +118,16 @@ span {
   }
 
     }
+    &__user{
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all .3s ease;
+        &:hover{
+            color: $yellow-color;
+        }
+    }
     &__dropdown{
 @include overlay;
 position: fixed;
@@ -223,6 +233,17 @@ display: none;
     background: none;
     border: none;
     cursor: pointer;
+    background-color: #666;
+    padding: 8px;
+    color: white;
+    border-radius: 50%;
+    span{
+        display: flex;
+        justify-content: center;
+        font-weight: 800;
+        font-weight: bold;
+    }
+
   }
   @include responsive('mobile'){
 

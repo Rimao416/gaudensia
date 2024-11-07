@@ -1,62 +1,72 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useAppDispatch, useAppSelector } from "../store/store";
-
 import { API } from "../config";
 import { setCredentials } from "../slice/authSlice";
-import axios from "axios";
+import { AxiosError } from "axios";
+
+// Fonction pour rafraîchir le token
+export const refreshToken = async () => {
+  try {
+    // Envoi de la requête pour rafraîchir le token
+    const response = await API.post("/auth/refresh");
+    return response.data.accessToken; // Retour du nouvel accessToken
+  } catch (error) {
+    console.error("Erreur lors du rafraîchissement du token", error);
+    return null;
+  }
+};
 
 const useUserData = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
-  console.log(user);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    const refreshToken = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await API.post("/auth/refresh", {});
-        console.log(response.data);
-        //   Cookies.set("token", response.data.accessToken); // Stocke le nouveau accessToken
-        //   return response.data.accessToken;
+        if (accessToken) {
+          // Utilisation de l'accessToken pour récupérer les données utilisateur
+          const response = await API.get("/user", {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+          dispatch(setCredentials(response.data));
+        }
       } catch (error) {
-        console.error("Erreur lors du rafraîchissement du token", error);
-
-        return null;
+        if ((error as AxiosError).response?.status === 401) {
+          console.log("Rafraîchissement de l'access token");
+          const newAccessToken = await refreshToken();
+          if (newAccessToken) {
+            // Mise à jour du token dans le cookie et en mémoire
+            Cookies.set("accessToken", newAccessToken, { expires: 1 / 24 }); // Le cookie expire après 1 heure
+            setAccessToken(newAccessToken);
+            // Relancer la requête après le rafraîchissement
+            const retryResponse = await API.get("/user", {
+              headers: { Authorization: `Bearer ${newAccessToken}` },
+            });
+            dispatch(setCredentials(retryResponse.data));
+          } else {
+            console.error("Échec du rafraîchissement du token");
+          }
+        }
       }
     };
-    if (token) {
-        console.log("J'envoie la requete")
-      // Envoie la requête uniquement si user est null
-      const fetchUserData = async () => {
-        try {
-          const response = await API.get("/user", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          console.log(response)
-          dispatch(setCredentials(response.data));
-        } catch (error) {
 
-            if (error instanceof axios.AxiosError && error.response?.status === 401) {
-                // Maintenant, TypeScript sait que `error` est une erreur Axios
-                const newToken = await refreshToken();
-                console.log("J'entre ici");
-                console.log(newToken);
-                // … ton code
-              } else {
-                console.error(
-                  "Erreur lors de la récupération des données de l'utilisateur",
-                  error
-                );
-              }
-        }
-      };
-
+    // Vérification initiale du token et de l'utilisateur
+    if (accessToken && !user) {
       fetchUserData();
     }
-  }, [dispatch, user]);
+  }, [accessToken, dispatch, user]); // Dépendances pour recharger si token ou utilisateur changent
+
+  useEffect(() => {
+    // Initialisation de l'accessToken depuis le cookie lors du premier rendu
+    const initialToken = Cookies.get("accessToken");
+    if (initialToken) {
+      setAccessToken(initialToken);
+    }
+  }, []); // Se déclenche uniquement au premier rendu
+
+  return { accessToken }; // Retourner l'accessToken si nécessaire
 };
 
 export default useUserData;

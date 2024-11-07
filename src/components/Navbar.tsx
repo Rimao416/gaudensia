@@ -75,14 +75,16 @@ function Navbar() {
           </ul>
           <div className="navigation__icons">
             {user ? (
-              <p>Bonjour {user.fullName}</p>
-            ):
-            <>
-            <Button type="inline" onClick={authModalOpen}>
-              Connexion
-            </Button>
-            </>
-            }
+              <div className="navigation__user">
+                <p>Bonjour {user.fullName}</p>
+              </div>
+            ) : (
+              <>
+                <Button type="inline" onClick={authModalOpen}>
+                  Connexion
+                </Button>
+              </>
+            )}
             <span
               className="navigation__icon"
               onClick={() => setOverlayVisible(true)}

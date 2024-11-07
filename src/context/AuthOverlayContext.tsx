@@ -14,7 +14,7 @@ type Action =
 
 // Initialiser l'état par défaut
 const initialState: AuthOverlayContextProps = {
-  isAuthOverlayVisible: true,
+  isAuthOverlayVisible: false,
   type: "login", // Par défaut, on commence sur "login"
   setAuthOverlayVisible: () => {}, // Fournir une fonction vide par défaut
   setType: () => {} // Fournir une fonction vide par défaut

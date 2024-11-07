@@ -56,7 +56,6 @@ function Home() {
   const { categories } = useAppSelector((state) => state.categories);
   const { dishes } = useAppSelector((state) => state.dishes);
   const { testimonials } = useAppSelector((state) => state.testimonials);
-  console.log(dishes);
   const filteredDishes = Array.isArray(dishes)
     ? selectedCategory
       ? dishes.filter((dish) => dish.category._id === selectedCategory)
@@ -67,7 +66,7 @@ function Home() {
   const random_menu = useState<MenuCategory>(
     myMenu.categories[Math.floor(Math.random() * myMenu.categories.length)]
   );
-  console.log(random_menu);
+  // console.log(random_menu);
 
   return (
     <div className="app">

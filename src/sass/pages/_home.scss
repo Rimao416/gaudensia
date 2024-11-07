@@ -623,6 +623,11 @@
         width: 100%;
         gap: 20px;
     }
+    &__button{
+        flex-direction: column;
+        width: fit-content;
+        gap: 10px;
+    }
     &__bigline{
         display: none;
     }
