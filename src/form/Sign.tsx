@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PhoneInput from "react-phone-number-input";
 import Joi from "joi";
-import Cookies from "js-cookie"
+
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setCredentials, setErrors, sign } from "../slice/authSlice";
 import { useMessages } from "../context/useMessage";
