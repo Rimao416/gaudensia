@@ -619,7 +619,7 @@
         display: none;
     }
     &__wrapper{
-        padding: $respo-padding;
+        padding: 80px $respo-padding;
         width: 100%;
         gap: 20px;
     }
@@ -636,7 +636,7 @@
     }
     &__brochette{
         position: absolute;
-        top: 100%;
+        top: 110%;
         left: 50%;
         transform: translate(-50%, -50%);
         
