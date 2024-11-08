@@ -8,26 +8,36 @@ import { useState, useEffect } from "react";
 
 function Auth() {
   const { isAuthOverlayVisible, type } = useAuthOverlay();
-  const isMobile = useResize(); // Utiliser le hook pour détecter si c'est mobile
-  const [isSheetOpen, setSheetOpen] = useState(isAuthOverlayVisible);
+  const isMobile = useResize();
+  const [isSheetOpen, setSheetOpen] = useState(false);
+  const [shouldRenderBottomSheet, setShouldRenderBottomSheet] = useState(false);
 
   // Fonction pour fermer le BottomSheet
   const handleBottomSheetClose = () => {
     setSheetOpen(false);
   };
 
-  // Mettre à jour l'état de BottomSheet à chaque changement de l'overlay
+  // Gestion du rendu en fonction de l'état `isAuthOverlayVisible` et `isMobile`
   useEffect(() => {
-    setSheetOpen(isAuthOverlayVisible);
-  }, [isAuthOverlayVisible]);
+    if (isAuthOverlayVisible) {
+      if (isMobile) {
+        setShouldRenderBottomSheet(true);
+        setSheetOpen(true);
+      } else {
+        setShouldRenderBottomSheet(false);
+      }
+    } else {
+      setSheetOpen(false);
+    }
+  }, [isAuthOverlayVisible, isMobile]);
 
   // Rendu du contenu (Login ou Sign)
-  const content = type === "login" ? <Login /> : <Sign />; 
+  const content = type === "login" ? <Login /> : <Sign />;
 
   return (
     <>
       {/* Si l'utilisateur est sur mobile, afficher un BottomSheet */}
-      {isMobile ? (
+      {shouldRenderBottomSheet ? (
         <BottomSheet
           isOpen={isSheetOpen}
           onClose={handleBottomSheetClose}
