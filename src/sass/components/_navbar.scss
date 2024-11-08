@@ -53,6 +53,9 @@
         justify-content: center;
         align-items: center;
         gap: 12px;
+        @include responsive('mobile'){
+            gap: 6px;
+        }
 
     }
     &__icon{
@@ -68,6 +71,8 @@
         justify-content: center;
         flex-direction: column;
         align-items: center;
+
+
         p{
             font-size: 12px;
             font-weight: 400;
@@ -299,6 +304,14 @@ display: none;
  
 
     .navigation{
+
+        &__icon > p{
+            display: none;
+        
+        }
+        &__icon div{
+            background-color: none;
+        }
      
 
         &__list{
@@ -306,6 +319,12 @@ display: none;
         }
         &__toggle{
             display: block;
+        }
+        &__user{
+            padding: 10px;
+        }
+        &__user > p{
+            display: none;
         }
     }
 
