@@ -39,6 +39,8 @@ const BottomSheet: React.FC<BottomSheetProps> = React.memo(({
         <Sheet.Content
           style={{
             paddingBottom: `${paddingBottom}px`,
+            paddingRight:"20px",
+            paddingLeft:"20px",
             willChange: "transform, opacity", // Accélération matérielle
           }}
         >

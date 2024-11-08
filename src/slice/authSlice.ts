@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { API } from "../config";
 import { user } from "../interface/user";
+import axios from "axios";
 
 interface AuthState {
   user: user | null;
@@ -9,6 +10,16 @@ interface AuthState {
   errors: {
     [key: string]: string | null;
   } | null;
+}
+interface ErrorResponse {
+  response?: {
+    data?: {
+      email?: string | null;
+      password?: string | null;
+      address?: string | null;
+      phoneNumber?: string | null;
+    };
+  };
 }
 
 const initialState: AuthState = {
@@ -34,18 +45,19 @@ export const sign = createAsyncThunk<user, Partial<user>>(
     }
   }
 );
-export const login = createAsyncThunk<user, Partial<user>>(
-  "auth/login",
-  async (user, thunkAPI) => {
-    API.defaults.withCredentials = true;
-    try {
-      const response = await API.post("/auth/login", user);
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+export const login = createAsyncThunk<
+  user,
+  Partial<user>,
+  { rejectValue: ErrorResponse }
+>("auth/login", async (user, thunkAPI) => {
+  API.defaults.withCredentials = true;
+  try {
+    const response = await API.post("/auth/login", user);
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error as ErrorResponse);
   }
-);
+});
 
 export const getUserData = createAsyncThunk<user, Partial<user>>(
   "auth/getUserData",
@@ -58,7 +70,10 @@ export const getUserData = createAsyncThunk<user, Partial<user>>(
       const response = await API.get("/user");
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      if (axios.isAxiosError(error)) {
+        return thunkAPI.rejectWithValue(error.response);
+      }
+      return thunkAPI.rejectWithValue("Un erreur s'est porduite");
     }
   }
 );
@@ -102,7 +117,17 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(login.rejected, (state, action) => {
+        if (action.payload?.response?.data) {
+          state.errors = action.payload.response.data;
+        } else {
+          state.errors = {
+            email:null,
+            password: null,
+            address: null,
+            phoneNumber: null,
+          };
+        }
         state.loading = false;
       });
   },

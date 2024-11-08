@@ -42,7 +42,7 @@ function Auth() {
           isOpen={isSheetOpen}
           onClose={handleBottomSheetClose}
           snapPoints={[600, 400, 200, 0]}
-          initialSnap={1}
+          initialSnap={0}
           draggableAt="both"
           paddingBottom={50}
         >

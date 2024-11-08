@@ -52,10 +52,9 @@ function Login() {
         newErrors[detail.path[0]] = detail.message;
       });
       dispatch(setErrors(newErrors));
-      return false;
-    } else {
-      console.log("Validation réussie");
-    }
+      return false; // Validation échouée
+    } 
+    return true; // Validation réussie
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const field = e.target.name; // Déclarer 'field' à partir de e.target.name
@@ -79,7 +78,9 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (handleValidation()) {
+
       const response = await dispatch(login(credentials));
       if (login.fulfilled.match(response)) {
         setMessage("Utilisateur connecté avec succès", "success");

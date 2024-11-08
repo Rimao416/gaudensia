@@ -147,9 +147,10 @@ function Navbar() {
           isOpen={isSheetOpen}
           onClose={() => setSheetOpen(false)}
           snapPoints={[400, 0]}
-          initialSnap={0}
+          initialSnap={1}
           draggableAt="both"
           paddingBottom={50}
+          
         >
           <p>Contenu personnalisé ici !</p>
         </BottomSheet>
