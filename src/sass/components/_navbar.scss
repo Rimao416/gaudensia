@@ -16,8 +16,7 @@
     @include responsive('mobile'){
         padding: 20px $respo-padding;
     }
-    // position: fixed;
-    // padding: ;
+
     &__list{
         @include liste;
         @include flexBetween;
@@ -51,24 +50,31 @@
     }
     &__icons{
         display: flex;
+        justify-content: center;
+        align-items: center;
         gap: 12px;
 
     }
     &__icon{
-        // display: flex;
-        // align-items: center;
-        // justify-content: center;
+
         background-color: $yellow-color !important;
         padding: 10px;
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
         color: white !important;
         font-weight: bold;
         border-radius: 10px;
         position: relative;
         cursor: pointer;
-        // color: white;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        p{
+            font-size: 12px;
+            font-weight: 400;
+        }
+        svg{
+            font-size: 20px;   
+        }
     }
     &__counter{
         position: absolute;
@@ -84,6 +90,10 @@
         font-size: 12px;
         color: white;
     }
+&__left{
+    display:flex;
+    gap: 12px;
+}
    
     &__toggle{
         width: 45px;
@@ -97,7 +107,7 @@
 
         z-index: 1001; // Pour être sûr que l'icône est toujours au-dessus des autres éléments
 background-color: $yellow-color;
-display: none;      
+// display: none;      
 span {
     display: block;
     width: 100%;
@@ -121,11 +131,51 @@ span {
     &__user{
         display: flex;
         align-items: center;
-        gap: 12px;
+        flex-direction: column;
+        gap: 2px;
         cursor: pointer;
         transition: all .3s ease;
+        border: 1px solid $yellow-color;
+        padding: 8px;
+        border-radius: 10px;
         &:hover{
             color: $yellow-color;
+        }
+        p{
+            color: white;
+            font-size: 12px;
+            &.active{
+                color: black;
+            }
+        }
+        span{
+            svg{
+                font-size: 20px;
+
+            }
+        }
+    }
+    &__login{
+        position: relative;
+        &--true{
+            position: absolute;
+            top: -2px;
+            right: -9px;
+            background-color: #32CD32;
+            border-radius: 50%;
+            padding: 3px;
+            svg{
+                font-size: 8px !important;
+                color: white;
+                display: flex;
+            }
+
+        }
+        &--wrapper{
+            color: white;
+            &.active{
+                color: black;
+            }
         }
     }
     &__dropdown{
@@ -219,7 +269,7 @@ display: none;
            bottom: 0;
            transform: translateX(-50%);
        }
-        // top: 0;
+
 
     }
 
