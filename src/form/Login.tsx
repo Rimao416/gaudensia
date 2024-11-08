@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
-
-import { useAppDispatch } from "../store/store";
-import { login } from "../slice/authSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { login, setErrors } from "../slice/authSlice";
 import { useMessages } from "../context/useMessage";
 import { useAuthOverlay } from "../context/useAuthOverlay";
+import Joi from "joi";
+
+const validationSchema = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required()
+    .messages({
+      "string.email": "Email invalide",
+      "string.empty": "L'email est requis",
+    }),
+  password: Joi.string().min(6).required().messages({
+    "string.empty": "Le mot de passe est requis",
+    "string.min": "Le mot de passe doit comporter au moins 6 caractères",
+  }),
+});
 function Login() {
   const dispatch = useAppDispatch();
   const { setAuthOverlayVisible } = useAuthOverlay();
@@ -15,48 +29,110 @@ function Login() {
     email: "",
     password: "",
   });
+  const [showErrors, setShowErrors] = useState<{ [key: string]: boolean }>({});
+  const { errors } = useAppSelector((state) => state.auth);
+  useEffect(() => {
+    const timers = Object.keys(showErrors).map((key) =>
+      setTimeout(() => {
+        setShowErrors((prev) => ({ ...prev, [key]: false }));
+      }, 5000)
+    );
 
+    return () => timers.forEach(clearTimeout);
+  }, [showErrors]);
+  const handleValidation = () => {
+    const { email, password } = credentials; // Récupérer les valeurs de l'état credentials
+    const { error } = validationSchema.validate(
+      { email, password }, // Utiliser les variables de l'état
+      { abortEarly: false }
+    );
+    if (error) {
+      const newErrors: { [key: string]: string | null } = {};
+      error.details.forEach((detail) => {
+        newErrors[detail.path[0]] = detail.message;
+      });
+      dispatch(setErrors(newErrors));
+      return false;
+    } else {
+      console.log("Validation réussie");
+    }
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    const field = e.target.name; // Déclarer 'field' à partir de e.target.name
+
+    setCredentials({ ...credentials, [field]: e.target.value });
+
+    // Vérifier et supprimer l'erreur associée au champ
+    if (errors && errors[field]) {
+      setErrors({
+        ...errors,
+        [field]: null, // Effacer l'erreur pour ce champ
+      });
+
+      // Afficher les erreurs après validation
+      setShowErrors({
+        ...showErrors,
+        [field]: true, // Afficher l'erreur pour ce champ spécifique
+      });
+    }
   };
 
-  const handleSubmit =async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response=await dispatch(login(credentials));
-    if(login.fulfilled.match(response)) {
-      setMessage("Utilisateur connecté avec succès", "success");
-      setAuthOverlayVisible(false);
-      
+    if (handleValidation()) {
+      const response = await dispatch(login(credentials));
+      if (login.fulfilled.match(response)) {
+        setMessage("Utilisateur connecté avec succès", "success");
+        setAuthOverlayVisible(false);
+      }
     }
   };
 
   return (
     <>
-    <div className="overlay__close" onClick={()=>setAuthOverlayVisible(false)}>
-      <span><IoClose /></span>
-    </div>
+      <div
+        className="overlay__close"
+        onClick={() => setAuthOverlayVisible(false)}
+      >
+        <span>
+          <IoClose />
+        </span>
+      </div>
       <h1 className="overlay__title" onClick={() => setType("sign")}>
         Connexion
       </h1>
       <p className="overlay__text">Commnencez à vous connecter</p>
       <form className="overlay__form" onSubmit={handleSubmit}>
-        <input
-          type="mail"
-          placeholder="E-mail"
-          className="overlay__input"
-          defaultValue={credentials.email}
-
-          name="email"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          className="overlay__input"
-          name="password"
-          defaultValue={credentials.password}
-          onChange={handleChange}
-        />
+        <div>
+          <input
+            type="mail"
+            placeholder="E-mail"
+            className={`overlay__input ${
+              errors && errors.email ? "input-error" : ""
+            }`}
+            defaultValue={credentials.email}
+            name="email"
+            onChange={handleChange}
+          />
+          {errors && errors.email && (
+            <p className="error-text">{errors && errors.email}</p>
+          )}
+        </div>
+        <div>
+          <input
+            type="password"
+            placeholder="Mot de passe"
+            className={`overlay__input ${
+              errors && errors.password ? "input-error" : ""
+            }`}
+            name="password"
+            defaultValue={credentials.password}
+            onChange={handleChange}
+          />
+          {errors && errors.password && (
+            <p className="error-text">{errors && errors.password}</p>
+          )}
+        </div>
         <p className="overlay__info">
           Créer un compte vous permet de commander plus rapidement,
           d'enregistrer plusieurs adresses, de suivre vos commandes et bien plus

@@ -4,7 +4,7 @@ import Logo_White from "../assets/logo_small_white.png";
 import { NavLink, useLocation } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 
-import { FaCheck } from "react-icons/fa";
+
 
 import { motion } from "framer-motion";
 import { useOverlay } from "../context/useOverlay";
@@ -13,15 +13,21 @@ import { useAuthOverlay } from "../context/useAuthOverlay";
 import Auth from "./Auth";
 import MessageDisplay from "./MessageDisplay";
 import { useAppSelector } from "../store/store";
-import { FaUser } from "react-icons/fa6";
 import BottomSheet from "./BottomSheet";
+import UserDisplay from "./UserDisplay";
 function Navbar() {
   const location = useLocation();
   const { isOverlayVisible, setOverlayVisible } = useOverlay();
   const [isSheetOpen, setSheetOpen] = useState(false);
-  const { isAuthOverlayVisible } = useAuthOverlay();
+  const { isAuthOverlayVisible,setAuthOverlayVisible } = useAuthOverlay();
   const [isOpen, setIsOpen] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
+
+
+    const authModalOpen = () => {
+    setOverlayVisible(false);
+    setAuthOverlayVisible(true);
+  };
 
   // Fonction de bascule du menu
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -111,29 +117,8 @@ function Navbar() {
             ))}
           </ul>
           <div className="navigation__icons">
-            {user ? (
-              <div className="navigation__user">
-                <p>Bonjour {user.fullName}</p>
-              </div>
-            ) : (
-              <>
-                <div className="navigation__user">
-                  <span className="navigation__login">
-                    <span className={`navigation__login--true`}>
-                      <FaCheck />
-                    </span>
-                    <span
-                      className={`navigation__login--wrapper ${
-                        isScrolled ? "active" : ""
-                      }`}
-                    >
-                      <FaUser />
-                    </span>
-                  </span>
-                  <p className={`${isScrolled ? "active" : ""}`}>Mon Compte</p>
-                </div>
-              </>
-            )}
+            <UserDisplay user={user} isScrolled={isScrolled} authModalOpen={authModalOpen}/>
+
             <span className="navigation__icon" onClick={handleCartClick}>
               <div>
                 <p className="navigation__counter">0</p>
@@ -141,7 +126,6 @@ function Navbar() {
               </div>
               <p>Mon Panier</p>
             </span>
-            
           </div>
         </div>
 

@@ -107,7 +107,7 @@
 
         z-index: 1001; // Pour être sûr que l'icône est toujours au-dessus des autres éléments
 background-color: $yellow-color;
-// display: none;      
+display: none;      
 span {
     display: block;
     width: 100%;
@@ -299,7 +299,8 @@ display: none;
 
     .navigation{
      
-        &__wrapper{
+
+        &__list{
             display: none;
         }
         &__toggle{
