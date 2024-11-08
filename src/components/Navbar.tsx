@@ -3,9 +3,6 @@ import Logo from "../assets/logo_small.png";
 import Logo_White from "../assets/logo_small_white.png";
 import { NavLink, useLocation } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-
-
-
 import { motion } from "framer-motion";
 import { useOverlay } from "../context/useOverlay";
 import CartUser from "./CartUser";
@@ -15,39 +12,33 @@ import MessageDisplay from "./MessageDisplay";
 import { useAppSelector } from "../store/store";
 import BottomSheet from "./BottomSheet";
 import UserDisplay from "./UserDisplay";
+
 function Navbar() {
   const location = useLocation();
   const { isOverlayVisible, setOverlayVisible } = useOverlay();
   const [isSheetOpen, setSheetOpen] = useState(false);
-  const { isAuthOverlayVisible,setAuthOverlayVisible } = useAuthOverlay();
+  const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();
   const [isOpen, setIsOpen] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-
-    const authModalOpen = () => {
+  const authModalOpen = () => {
     setOverlayVisible(false);
     setAuthOverlayVisible(true);
   };
 
-  // Fonction de bascule du menu
   const toggleMenu = () => setIsOpen(!isOpen);
-  const [isScrolled, setIsScrolled] = useState(true);
+
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleCartClick = () => {
     if (window.innerWidth < 768) {
-      // Appeler une autre fonction en mode mobile
       setSheetOpen(true); // Ouvre le BottomSheet en mode mobile
     } else {
       setOverlayVisible(true); // Affiche l'overlay sur desktop
@@ -94,7 +85,6 @@ function Navbar() {
           </motion.div>
           <img src={isScrolled ? Logo : Logo_White} alt="Logo" />
         </div>
-
         <div className="navigation__wrapper">
           <ul className="navigation__list">
             {menuItems.map((item) => (
@@ -108,7 +98,7 @@ function Navbar() {
                         ? "active "
                         : ""
                     }
-                  ${isScrolled ? "scrolled-link" : "default-link"}`
+                    ${isScrolled ? "scrolled-link" : "default-link"}`
                   }
                 >
                   {item.label}
@@ -117,8 +107,7 @@ function Navbar() {
             ))}
           </ul>
           <div className="navigation__icons">
-            <UserDisplay user={user} isScrolled={isScrolled} authModalOpen={authModalOpen}/>
-
+            <UserDisplay user={user} isScrolled={isScrolled} authModalOpen={authModalOpen} />
             <span className="navigation__icon" onClick={handleCartClick}>
               <div>
                 <p className="navigation__counter">0</p>
@@ -128,10 +117,6 @@ function Navbar() {
             </span>
           </div>
         </div>
-
-        {/* Icône du menu burger */}
-
-        {/* Menu déroulant pour le mobile */}
         <div className={`navigation__dropdown ${isOpen ? "open" : ""}`}>
           <div className="navigation__dropdown--wrapper">
             <img src={Logo} alt="Logo" />
@@ -154,22 +139,21 @@ function Navbar() {
             </ul>
           </div>
         </div>
-
-        {/* Overlay */}
         {isOverlayVisible && <CartUser />}
         {isAuthOverlayVisible && <Auth />}
       </section>
-      <BottomSheet
-        isOpen={isSheetOpen}
-        onClose={() => setSheetOpen(false)}
-        snapPoints={[600, 400, 200, 0]}
-        initialSnap={1}
-        draggableAt="both"
-        paddingBottom={50} // Définit un padding bas de 50px
-      >
-        <p>Contenu personnalisé ici !</p>
-      </BottomSheet>
-
+      {isSheetOpen && (
+        <BottomSheet
+          isOpen={isSheetOpen}
+          onClose={() => setSheetOpen(false)}
+          snapPoints={[400, 0]}
+          initialSnap={0}
+          draggableAt="both"
+          paddingBottom={50}
+        >
+          <p>Contenu personnalisé ici !</p>
+        </BottomSheet>
+      )}
       <MessageDisplay />
     </>
   );
