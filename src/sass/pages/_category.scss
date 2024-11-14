@@ -1,0 +1,43 @@
+.category{
+    @include menu;
+    @include title;
+    
+    &__body{
+        padding: $main-padding;
+        display: flex;
+        flex-wrap: wrap;
+        // justify-content:space-between;
+
+        gap: 45px;
+        *{
+            flex-basis: 20%;
+
+        }
+    }
+    &__wrapper{
+        text-align: center;
+        background-color: $yellow-color;
+        width: fit-content;
+        padding: 10px;
+        border-radius: 150px;
+        color: white;
+        transition: all .5s ease;
+        cursor: pointer;
+        &:hover{
+            transform: translateY(-15%);
+        }
+    }
+}
+@include responsive('mobile'){
+    .category{
+        &__body{
+            padding: $respo-padding;
+            flex-direction: column;
+            gap: 20px;
+            *{
+                width: 100%;
+        
+            }
+        }
+    }            
+}
