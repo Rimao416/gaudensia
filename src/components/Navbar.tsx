@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Logo from "../assets/logo_small.png";
-import Logo_White from "../assets/logo_small_white.png";
+import Logo_White from "../assets/logo_small_red.png";
 import { NavLink, useLocation } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -11,7 +11,8 @@ import Auth from "./Auth";
 import MessageDisplay from "./MessageDisplay";
 import { useAppSelector } from "../store/store";
 import BottomSheet from "./BottomSheet";
-import UserDisplay from "./UserDisplay";
+import { TfiWorld } from "react-icons/tfi";
+import { IoIosArrowDown } from "react-icons/io";
 
 function Navbar() {
   const location = useLocation();
@@ -86,35 +87,18 @@ function Navbar() {
           <img src={isScrolled ? Logo : Logo_White} alt="Logo" />
         </div>
         <div className="navigation__wrapper">
-          <ul className="navigation__list">
-            {menuItems.map((item) => (
-              <li key={item.label}>
-                <NavLink
-                  to={item.link}
-                  className={({ isActive }) =>
-                    `${
-                      isActive ||
-                      (location.pathname === "/" && item.link === "/")
-                        ? "active "
-                        : ""
-                    }
-                    ${isScrolled ? "scrolled-link" : "default-link"}`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
           <div className="navigation__icons">
-            <UserDisplay user={user} isScrolled={isScrolled} authModalOpen={authModalOpen} />
-            <span className="navigation__icon" onClick={handleCartClick}>
-              <div>
-                <p className="navigation__counter">0</p>
-                <FaShoppingCart />
-              </div>
-              <p>Mon Panier</p>
+            <button className="button button__outline">Connexion</button>
+            <div className="navigation__icons--language">
+              <span className="navigation__icons--world">
+                <TfiWorld />
+              </span>
+            <p>FR</p>
+            <span className="navigation__icons--arrow">
+              <IoIosArrowDown/>
             </span>
+
+            </div>
           </div>
         </div>
         <div className={`navigation__dropdown ${isOpen ? "open" : ""}`}>
@@ -150,7 +134,6 @@ function Navbar() {
           initialSnap={1}
           draggableAt="both"
           paddingBottom={50}
-          
         >
           <p>Contenu personnalisé ici !</p>
         </BottomSheet>

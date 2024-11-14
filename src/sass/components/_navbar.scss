@@ -16,173 +16,45 @@
     @include responsive('mobile'){
         padding: 20px $respo-padding;
     }
-
-    &__list{
-        @include liste;
-        @include flexBetween;
-        gap: 26px;
-        a{
-
-            color: white;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            
-            &:hover{
-                color: $yellow-color;
-            }
-            &.scrolled-link{
-                color: black;
-            }
-            &.default-link{
-                color: white;
-            }
-            &.active{
-                color: $yellow-color !important;
-            }
-
-        }
-        
-        
-    }
-    &__wrapper{
-        display: flex;
-        gap: 86px;
-    }
     &__icons{
         display: flex;
-        justify-content: center;
+        gap: 14px;
+       &--language{
+        display: flex;
         align-items: center;
-        gap: 12px;
-        @include responsive('mobile'){
-            gap: 6px;
-        }
-
-    }
-    &__icon{
-
-        background-color: $yellow-color !important;
+        gap: 6px;
+        justify-content: center;
+        cursor: pointer;
+        border: 1px solid #e2e2e2;
+        border-radius: 12px;
         padding: 10px;
-        color: white !important;
-        font-weight: bold;
-        border-radius: 10px;
-        position: relative;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-
-
-        p{
-            font-size: 12px;
-            font-weight: 400;
-        }
-        svg{
-            font-size: 20px;   
-        }
-    }
-    &__counter{
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        background-color: #666;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
+        background-color: #33322e;
         color: white;
-    }
-&__left{
-    display:flex;
-    gap: 12px;
-}
-   
-    &__toggle{
-        width: 45px;
-        height: 45px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        cursor: pointer;
-        padding: 12px 10px;
-        border-radius: 10px;
+        transition: all 0.3s ease;
+        &:hover{
+            background-color: black;
+        }
 
-        z-index: 1001; // Pour être sûr que l'icône est toujours au-dessus des autres éléments
-background-color: $yellow-color;
-display: none;      
-span {
-    display: block;
-    width: 100%;
-    height: 2px;
-    margin-bottom: 6px;
-    background-color: white;
-    border-radius: 4px;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-
-    &:nth-child(2) {
-        transition: opacity 0.1s ease;
-        width: 80%;
-    }
-    &:nth-child(3) {
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        width: 60%;
-    }
-  }
-
-    }
-    &__user{
+       } 
+       &--world{
         display: flex;
         align-items: center;
-        flex-direction: column;
-        gap: 2px;
-        cursor: pointer;
-        transition: all .3s ease;
-        border: 1px solid $yellow-color;
-        padding: 8px;
-        border-radius: 10px;
-        &:hover{
-            color: $yellow-color;
-        }
-        p{
-            color: white;
-            font-size: 12px;
-            &.active{
-                color: black;
-            }
-        }
-        span{
-            svg{
-                font-size: 20px;
+        justify-content: center;
+       }
+       p{
+        font-size: 14px;
+       }
+       &--arrow{
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        color: white;
+       }
 
-            }
-        }
     }
-    &__login{
-        position: relative;
-        &--true{
-            position: absolute;
-            top: -2px;
-            right: -9px;
-            background-color: #32CD32;
-            border-radius: 50%;
-            padding: 3px;
-            svg{
-                font-size: 8px !important;
-                color: white;
-                display: flex;
-            }
 
-        }
-        &--wrapper{
-            color: white;
-            &.active{
-                color: black;
-            }
-        }
-    }
+
+
     &__dropdown{
 @include overlay;
 position: fixed;
