@@ -1,13 +1,15 @@
 .item{
-    padding: 14px;
+    padding: 16px;
     height: 200px;
     border: 1px solid #e2e2e2;
-    border-radius: 20px;
+    background-color: white;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: space-between;
     align-self:flex-end;
+    transition: all 0.3s ease;
 
     // box-shadow:inset 0px 15px 55px rgba(34, 34, 34, 0.1);
     h3{
@@ -20,11 +22,35 @@
         color: #222;
     }
     &__price{
-        color: $yellow-color;
-        font-weight: bold;
+        // color: $yellow-color;
+        color: #222;
+        font-weight: 500;
+        // font-weight: bold;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+    }
+    &__plus{
+        padding: 10px;
+        display: flex;
+        // color: #222;
+        color: $green-color;
+        background-color: rgb(243, 253, 243);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        &:hover{
+            background-color: rgb(255, 0, 0,0.8);
+        }
     }
     ul{
         list-style: none;
+    }
+    &:hover{
+        box-shadow: 0px 5px 30px 0px rgba(255, 166, 32, 0.2);
+        transform: scale(1.05);
     }
 
 }
@@ -33,5 +59,6 @@
         &__price{
             margin-top: 12px;
         }
+
     }
 }

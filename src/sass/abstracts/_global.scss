@@ -12,11 +12,11 @@
         text-decoration: none;
     }
 &__outline{
-    background-color: $red-color;
+    background-color: $green-color;
     border-color: $red-color;
     color: white;
     &:hover{
-       background-color: rgb(137,1,1);
+       background-color: rgb(74, 139, 99);
     }
 }
 &__inline{
@@ -84,6 +84,9 @@ a{
     overflow: hidden;
     line-height: 0;
     transform: rotate(180deg);
+    @include responsive('mobile'){
+        display: none;
+    }
 }
 
 .custom-shape-divider-bottom-1731570127 svg {
@@ -96,3 +99,68 @@ a{
 .custom-shape-divider-bottom-1731570127 .shape-fill {
     fill: #FFFFFF;
 }
+
+
+
+
+
+
+.custom-shape-divider-top-1731589010 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    @include responsive('mobile'){
+        display: none;
+    }
+}
+.custom-shape-divider-top-1731589010 svg {
+    position: relative;
+    display: block;
+    width: calc(162% + 1.3px);
+    height: 245px;
+}
+.custom-shape-divider-top-1731589010 .shape-fill {
+    fill: #FFFAE8;
+}
+
+
+/* LineWaveSpinner.css */
+/* LineWaveSpinner.css */
+
+.line-wave-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3px;
+    margin: 0 auto;
+  }
+  
+  .line-wave {
+    border-radius: 2px;  /* Bords arrondis pour un effet plus fluide */
+    animation: wave 1.5s infinite ease-in-out;
+  }
+  
+  .line-wave:nth-child(1) {
+    animation-delay: 0s;
+  }
+  
+  .line-wave:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .line-wave:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes wave {
+    0%, 100% {
+      transform: scaleY(1);  /* Taille normale */
+    }
+    50% {
+      transform: scaleY(0.5);  /* Réduction de la taille pour créer l'effet de vague */
+    }
+  }
+  

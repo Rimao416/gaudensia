@@ -1,0 +1,20 @@
+.info{
+display: flex;
+flex-direction: column;
+gap: 15px;
+&__wrapper{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    transition: .5s all ease;
+    span{
+        svg{
+            font-size: 20px;
+        }
+    }
+    &:hover{
+        background-color: #F5F5F5;
+    }
+}
+}

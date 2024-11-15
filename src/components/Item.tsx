@@ -1,23 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { dishes } from "../interface/dishes";
 import { truncateTitle } from "../utils";
-import { Link } from "react-router-dom";
+import { FaPlus } from "react-icons/fa6";
+import ItemModal from "./ItemModal";
 
-const Item: React.FC<dishes> = ({ _id, name, description, prices }) => {
+const Item: React.FC<dishes> = ({ name, description, prices }) => {
+  const [modalData, setModalData] = useState<dishes | null>(null);
+
+  const handleOpenModal = () => {
+    setModalData({ name, description, prices }); // Envoie des données à l'enfant
+  };
+
+  const handleCloseModal = () => {
+    setModalData(null); // Ferme le modal
+  };
+
   return (
-    <Link className="item" to={`/plats/${_id}`}>
-      <div>
-        <h3>{truncateTitle(name, 30)}</h3>
-        <p>{truncateTitle(description, 60)}</p>
+    <div>
+      {/* Contenu principal */}
+      <div
+        className="item"
+        style={{ cursor: "pointer" }}
+        onClick={handleOpenModal}
+      >
+        <div>
+          <h3>{truncateTitle(name, 30)}</h3>
+          <p>{truncateTitle(description, 60)}</p>
+        </div>
+        <ul className="item__price">
+          <div className="item__list">
+            {prices.map((priceData, idx) => (
+              <li key={idx}>
+                {priceData.quantity} - {priceData.price} PLN
+              </li>
+            ))}
+          </div>
+          <div className="item__plus">
+            <FaPlus />
+          </div>
+        </ul>
       </div>
-      <ul className="item__price">
-        {prices.map((priceData, idx) => (
-          <li key={idx}>
-            {priceData.quantity} - {priceData.price} PLN
-          </li>
-        ))}
-      </ul>
-    </Link>
+
+      {/* Affichage du modal */}
+      {modalData && <ItemModal data={modalData} onClose={handleCloseModal} />}
+    </div>
   );
 };
 

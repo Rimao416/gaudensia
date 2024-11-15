@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Logo from "../assets/logo_small.png";
 import Logo_White from "../assets/logo_small_red.png";
 import { NavLink, useLocation } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { FaUserAlt } from "react-icons/fa";
 import { useOverlay } from "../context/useOverlay";
 import CartUser from "./CartUser";
 import { useAuthOverlay } from "../context/useAuthOverlay";
@@ -13,9 +13,11 @@ import { useAppSelector } from "../store/store";
 import BottomSheet from "./BottomSheet";
 import { TfiWorld } from "react-icons/tfi";
 import { IoIosArrowDown } from "react-icons/io";
+import UserInfo from "./UserInfo";
 
 function Navbar() {
   const location = useLocation();
+  const [isUserToggle, setIsUserToggle] = useState(false);
   const { isOverlayVisible, setOverlayVisible } = useOverlay();
   const [isSheetOpen, setSheetOpen] = useState(false);
   const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();
@@ -88,16 +90,36 @@ function Navbar() {
         </div>
         <div className="navigation__wrapper">
           <div className="navigation__icons">
-            <button className="button button__outline">Connexion</button>
+            {user ? (
+              <div
+                className="navigation__user"
+                onClick={() => setIsUserToggle(!isUserToggle)}
+              >
+                <span>
+                  <FaUserAlt />
+                </span>
+                <p>{user?.fullName}</p>
+                <span>
+                  <IoIosArrowDown />
+                </span>
+                {isUserToggle && <UserInfo />}
+              </div>
+            ) : (
+              <button
+                className="button button__outline"
+                onClick={authModalOpen}
+              >
+                Connexion
+              </button>
+            )}
             <div className="navigation__icons--language">
               <span className="navigation__icons--world">
                 <TfiWorld />
               </span>
-            <p>FR</p>
-            <span className="navigation__icons--arrow">
-              <IoIosArrowDown/>
-            </span>
-
+              <p>FR</p>
+              <span className="navigation__icons--arrow">
+                <IoIosArrowDown />
+              </span>
             </div>
           </div>
         </div>
