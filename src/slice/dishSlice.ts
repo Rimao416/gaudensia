@@ -43,6 +43,7 @@ export const fetchMenuByCategories = createAsyncThunk(
       const response = await API.get("/dishes/getMenuCategories");
       return response.data; // Assure-toi que la réponse soit dans le format attendu
     } catch (error: unknown) {
+      console.log(error)
       if (error instanceof Error) {
         return rejectWithValue(error.message);
       }

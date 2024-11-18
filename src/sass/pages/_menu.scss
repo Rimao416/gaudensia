@@ -1,51 +1,51 @@
 .table {
     padding: $main-padding;
+  
     &__header {
       width: 100% !important;
       display: flex;
       position: relative;
-    //   height: 40px;
       justify-content: space-between;
       align-items: center;
       padding: 0 30px;
       box-shadow: 0px 15px 55px rgba(34, 34, 34, 0.1);
-      gap: 15px;    
+      gap: 15px;
       height: 40px;
-
     }
+  
     &__search {
-        position: absolute;
-        top: 0;
-        height: inherit; /* Adapte la hauteur à celle du parent */
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-        border: 1px solid #e2e2e2;
-        border-radius: 24px;
-    
-        input {
-          border: none;
-          outline: none;
-          width: 100%;
+      position: absolute;
+      top: 0;
+      height: inherit;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e2e2;
+      border-radius: 24px;
+  
+      input {
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 14px;
+  
+        &::placeholder {
+          color: #e2e2e2;
           font-size: 14px;
-          &::placeholder {
-            color: #e2e2e2;
-            font-size: 14px;
-          }
-        }
-        svg{
-            font-size: 16px;
-            margin-left: 10px;
         }
       }
+  
+      svg {
+        font-size: 16px;
+        margin-left: 10px;
+      }
+    }
   
     &__categories {
       flex-basis: 70% !important;
       margin-left: 25% !important;
     }
-  
-    
   
     &__category {
       padding: 10px;
@@ -54,14 +54,55 @@
       font-size: 14px;
       cursor: pointer;
       text-align: center;
-      &--active{
-        background-color: $yellow-color;
-    }
-      &:hover{
+  
+      &--active {
         background-color: $yellow-color;
       }
-      
-
+  
+      &:hover {
+        background-color: $yellow-color;
+      }
+    }
+  
+    &__content {
+      margin-top: 40px;
+    }
+  
+    &__items {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      flex-wrap: wrap;
+      gap: 20px;
+      .item{
+        flex-basis: 48%;
+      }
+    }
+  
+    &__wrapper {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+    }
+  
+    &__container {
+      flex-basis: 70%;
+      overflow-y: auto;
+      max-height: 80vh; /* Limiter la hauteur et permettre le défilement */
+      padding-right: 20px; /* Pour ajouter un espace de défilement */
+    }
+  
+    &__order {
+      flex-basis: 30%;
+      position: sticky; /* Fixer la position du panier */
+      top: 20px; /* Espacement depuis le haut de la page */
+      height: 80vh;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow-y: auto;
+      max-height: 80vh;
     }
   }
   

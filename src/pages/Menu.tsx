@@ -8,21 +8,20 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import type { Swiper as SwiperCore } from "swiper"; // Import du type Swiper
-import "swiper/css";
-import "swiper/css/pagination";
 import { truncateTitle } from "../utils";
 import { getCategories } from "../slice/categorySlice";
+import Item from "../components/Item";
 
 function Menu() {
   const dispatch = useAppDispatch();
   const { categoriesWithDishes } = useAppSelector((state) => state.dishes);
   const { categories } = useAppSelector((state) => state.categories);
-  const [activeCategory, setActiveCategory] = useState<string>("all"); // "all" actif par défaut
+  const [activeCategory, setActiveCategory] = useState<string>("all");
 
   const handleCategoryClick = (categoryId: string) => {
-    setActiveCategory(categoryId); // Définir la catégorie active
+    setActiveCategory(categoryId);
   };
+
   useEffect(() => {
     dispatch(fetchMenuByCategories());
     dispatch(getCategories());
@@ -32,12 +31,6 @@ function Menu() {
     <div>
       <Navbar />
       <div className="table">
-        {/* <div className="table__wrapper">
-          <img src={Bnr} alt={Bnr} className="table__banner" />
-          <div className="table__title">
-            <h1>Menu</h1>
-          </div>
-        </div> */}
         <div className="table__body">
           <div className="table__header">
             <div className="table__search">
@@ -50,16 +43,6 @@ function Menu() {
               slidesPerView={4}
               spaceBetween={40}
             >
-              <SwiperSlide key="all">
-                <div
-                  className={`table__category ${
-                    activeCategory === "all" ? "table__category--active" : ""
-                  }`}
-                  onClick={() => handleCategoryClick("all")}
-                >
-                  Tout
-                </div>
-              </SwiperSlide>
               {categories &&
                 categories.map((category) => (
                   <SwiperSlide key={category._id}>
@@ -76,6 +59,32 @@ function Menu() {
                   </SwiperSlide>
                 ))}
             </Swiper>
+          </div>
+
+          <div className="table__wrapper">
+            {/* Contenu défilable des catégories et plats */}
+            <div className="table__container">
+              {categoriesWithDishes &&
+                categoriesWithDishes.map((category) => (
+                  <div key={category.category._id} className="table__content">
+                    <h2>{category.category.name}</h2>
+                    <div className="table__items">
+                      {category.dishes.map((dish) => (
+                        <Item key={dish._id} {...dish} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            {/* Panier à droite */}
+            <div className="table__order">
+              <h1>DFSD</h1>
+              <div className="order-details">
+                {/* Contenu du panier */}
+                <p>Panier de l'utilisateur ici...</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
