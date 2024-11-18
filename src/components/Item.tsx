@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { dishes } from "../interface/dishes";
 import { truncateTitle } from "../utils";
 import { FaPlus } from "react-icons/fa6";
-import ItemModal from "./ItemModal";
+import ItemModal from "./itemModal";
 
-const Item: React.FC<dishes> = ({ name, description, prices }) => {
-  const [modalData, setModalData] = useState<dishes | null>(null);
+const Item: React.FC<dishes> = ({ name, description, prices, _id }) => {
+  const [modalData, setModalData] = useState<Partial<dishes> | null>(null);
 
   const handleOpenModal = () => {
-    setModalData({ name, description, prices }); // Envoie des données à l'enfant
+    setModalData({ name, description, prices, _id }); // Envoie des données à l'enfant
   };
 
   const handleCloseModal = () => {
@@ -16,8 +16,7 @@ const Item: React.FC<dishes> = ({ name, description, prices }) => {
   };
 
   return (
-    <div>
-      {/* Contenu principal */}
+    <>
       <div
         className="item"
         style={{ cursor: "pointer" }}
@@ -39,11 +38,11 @@ const Item: React.FC<dishes> = ({ name, description, prices }) => {
             <FaPlus />
           </div>
         </ul>
+
       </div>
 
-      {/* Affichage du modal */}
-      {modalData && <ItemModal data={modalData} onClose={handleCloseModal} />}
-    </div>
+      {modalData && <ItemModal data={modalData as dishes} onClose={handleCloseModal} />}
+    </>
   );
 };
 

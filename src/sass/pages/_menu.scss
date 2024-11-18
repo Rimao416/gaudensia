@@ -1,73 +1,36 @@
-.mySwiper {
-    width: 100% !important;}
 .table{
-    @include menu;
-    &__body{
-        padding: 40px $main-padding  $main-padding;
+    padding: $main-padding;
+    &__header{
+        width: 100% !important;
+        // display: flex;
+        // justify-content: space-between;
     }
-    &__row{
-        margin-bottom: 85px;
-        ul{
-            list-style: none;
-            padding: 0;
-        }
-    }
-    &__item{
-        padding: 14px;
-        height: 200px;
-        border: 1px solid #e2e2e2;
-        border-radius: 20px;
+    &__search{
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        justify-content: space-between;
-        align-self:flex-end;
-        // box-shadow:inset 0px 15px 55px rgba(34, 34, 34, 0.1);
-        h3{
-            font-weight: 600;
-            font-size: 18px;
-        }
-        p{
-            margin-top: 12px;
-            font-size: 14px;
-            color: #222;
-        }
-    }
-    &__price{
-        color: $yellow-color;
-        font-weight: bold;
-    }
-   
-
-    &__main{
-        font-size: 30px;
-        // font-weight: bold;
-        color: $yellow-color;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
         margin-bottom: 20px;
-        font-family: "Lobster";
-    }
-   @include title;
-  
-
-}
-@include responsive('mobile'){
-    .table{
-        &__header{
+        border: 1px solid #e2e2e2;
+        width: fit-content;
+        padding: 10px;
+        position: relative;
+        input{
+            border: none;
+            outline: none;
+            border-radius: 5px;
             width: 100%;
-            height: 50vh;
-        }
-        &__container{
-            flex-direction: column;
-        }
-        &__body{
-            padding: 20px $respo-padding 0 $respo-padding;
-    
-        }
-        &__wrapper{
-
-            h1{
-                font-size: 36px;
+            font-size: 14px;	
+            &::placeholder{
+                color: #e2e2e2;
+                font-size: 14px;
             }
         }
+        
+    }
+    &__categories{
+        width: 100% !important;
+        margin-top: 30px;
+       
     }
 }

@@ -10,6 +10,6 @@ export default function LoadingSpinner() {
         color="#4fa94d"
         ariaLabel="line-wave-loading"
       />
-    </div>
+    </div> 
   );
 }

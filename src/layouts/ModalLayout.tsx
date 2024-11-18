@@ -1,6 +1,6 @@
 interface ModalLayoutProps {
   children: React.ReactNode;
-  type: "center" | "right" | "custom";
+  type: "center" | "right" | "custom" | "cart";
 }
 
 const ModalLayout: React.FC<ModalLayoutProps> = ({ children, type }) => {
