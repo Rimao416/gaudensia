@@ -1,11 +1,9 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import Bnr from "../assets/bnr2.jpg";
 import { IoMdSearch } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchMenuByCategories } from "../slice/dishSlice";
-import { Link } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -20,7 +18,11 @@ function Menu() {
   const dispatch = useAppDispatch();
   const { categoriesWithDishes } = useAppSelector((state) => state.dishes);
   const { categories } = useAppSelector((state) => state.categories);
+  const [activeCategory, setActiveCategory] = useState<string>("all"); // "all" actif par défaut
 
+  const handleCategoryClick = (categoryId: string) => {
+    setActiveCategory(categoryId); // Définir la catégorie active
+  };
   useEffect(() => {
     dispatch(fetchMenuByCategories());
     dispatch(getCategories());
@@ -48,10 +50,27 @@ function Menu() {
               slidesPerView={4}
               spaceBetween={40}
             >
+              <SwiperSlide key="all">
+                <div
+                  className={`table__category ${
+                    activeCategory === "all" ? "table__category--active" : ""
+                  }`}
+                  onClick={() => handleCategoryClick("all")}
+                >
+                  Tout
+                </div>
+              </SwiperSlide>
               {categories &&
                 categories.map((category) => (
                   <SwiperSlide key={category._id}>
-                    <div className="table__category">
+                    <div
+                      className={`table__category ${
+                        activeCategory === category._id
+                          ? "table__category--active"
+                          : ""
+                      }`}
+                      onClick={() => handleCategoryClick(category._id)}
+                    >
                       {truncateTitle(category.name, 15)}
                     </div>
                   </SwiperSlide>
