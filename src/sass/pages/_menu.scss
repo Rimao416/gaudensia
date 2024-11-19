@@ -4,13 +4,15 @@
     &__header {
       width: 100% !important;
       display: flex;
-      position: relative;
+      position: sticky; /* Position sticky pour le header */
+      top: 0; /* Rester en haut de la page */
       justify-content: space-between;
       align-items: center;
       padding: 0 30px;
       box-shadow: 0px 15px 55px rgba(34, 34, 34, 0.1);
       gap: 15px;
       height: 40px;
+      z-index: 10; /* Pour éviter que le header soit caché par d'autres éléments */
     }
   
     &__search {
@@ -66,6 +68,7 @@
   
     &__content {
       margin-top: 40px;
+      padding: 10px;
     }
   
     &__items {
@@ -74,7 +77,8 @@
       margin-top: 24px;
       flex-wrap: wrap;
       gap: 20px;
-      .item{
+  
+      .item {
         flex-basis: 48%;
       }
     }
@@ -103,6 +107,22 @@
       border-radius: 8px;
       overflow-y: auto;
       max-height: 80vh;
+      z-index: 5; /* S'assurer que le panier reste au-dessus des autres éléments */
+      margin-top: 24px;
+      position: relative;
+      &--img{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        // width: 100%;
+        z-index: -1;
+        border-radius: 8px;
+
+      }
+      &--list{
+        list-style: none;
+      }
     }
   }
   

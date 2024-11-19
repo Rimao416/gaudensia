@@ -11,15 +11,17 @@ import { Navigation } from "swiper/modules";
 import { truncateTitle } from "../utils";
 import { getCategories } from "../slice/categorySlice";
 import Item from "../components/Item";
-
+import Shopping from "../assets/shopping.png";
 function Menu() {
   const dispatch = useAppDispatch();
   const { categoriesWithDishes } = useAppSelector((state) => state.dishes);
   const { categories } = useAppSelector((state) => state.categories);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const { items } = useAppSelector((state) => state.cart);
+
+  const [activeCategory, setActiveCategory] = useState<string>("all"); // "all" actif par défaut
 
   const handleCategoryClick = (categoryId: string) => {
-    setActiveCategory(categoryId);
+    setActiveCategory(categoryId); // Définir la catégorie active
   };
 
   useEffect(() => {
@@ -60,9 +62,7 @@ function Menu() {
                 ))}
             </Swiper>
           </div>
-
           <div className="table__wrapper">
-            {/* Contenu défilable des catégories et plats */}
             <div className="table__container">
               {categoriesWithDishes &&
                 categoriesWithDishes.map((category) => (
@@ -76,14 +76,34 @@ function Menu() {
                   </div>
                 ))}
             </div>
-
-            {/* Panier à droite */}
             <div className="table__order">
-              <h1>DFSD</h1>
-              <div className="order-details">
-                {/* Contenu du panier */}
-                <p>Panier de l'utilisateur ici...</p>
-              </div>
+              {items.length > 0 ? ( // Si le panier contient des éléments
+              <>
+              <h3>Votre Commande</h3>
+              
+              <ul className="table__order--list">
+                  {items.map((item) => (
+                    <li key={item.id} className="table__order--item">
+                      <div className="table__order--details">
+                        <h4>{item.name}</h4>
+                        <p>Quantité : {item.quantity}</p>
+                        <p>Prix : {item.price} PLN</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </>
+                
+              ) : (
+                <>
+                  <h3>Vous pouvez commander ici</h3>
+                  <img
+                    src={Shopping}
+                    alt="shopping"
+                    className="table__order--img"
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>

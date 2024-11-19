@@ -39,7 +39,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ data, onClose }) => {
       addItemToCart({
         id: data._id,
         name: data.name,
-        price: data.prices[0].price, // Prix unitaire
+        price: data.prices[0].price  , // Prix unitaire
         quantity,
       })
     );

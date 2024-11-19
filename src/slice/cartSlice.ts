@@ -22,13 +22,16 @@ const cartSlice = createSlice({
     addItemToCart: (state, action: PayloadAction<CartItem>) => {
       const item = state.items.find((i) => i.id === action.payload.id);
       if (item) {
-        // Si l'article existe déjà, on met à jour la quantité
-        console.log("Mise à jour de l'article ",item)
+        console.log("Mise à jour de l'article :", item);
         item.quantity += action.payload.quantity;
+        // Recalcule le prix total
+        item.price = action.payload.price * item.quantity;
       } else {
-        // Sinon, on ajoute un nouvel article
         console.log("Ajout d'un nouvel article :", action.payload);
-        state.items.push(action.payload);
+        state.items.push({
+          ...action.payload,
+          price: action.payload.price * action.payload.quantity, // Calcul du prix total
+        });
       }
     },
     removeItemFromCart: (state, action: PayloadAction<string>) => {
