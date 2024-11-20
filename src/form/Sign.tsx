@@ -7,15 +7,11 @@ import { setErrors, sign } from "../slice/authSlice";
 import { useMessages } from "../context/useMessage";
 import { useAuthOverlay } from "../context/useAuthOverlay";
 import { IoClose } from "react-icons/io5";
-import { user } from "../interface/user";
-import LoadingSpinner from "../constants/loader";
-import LineWaveSpinner from "../components/LineWaveSpinenr";
+
+
 import GetCurrentLocation from "../components/Location";
 // Schéma de validation
-
 function Sign() {
-  const [loadingAddress, setLoadingAddress] = useState(false);
-
   const { setMessage } = useMessages();
   const dispatch = useAppDispatch();
   const { setAuthOverlayVisible, setType, type } = useAuthOverlay();
