@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar";
 import Bnr from "../assets/bnr2.jpg";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useEffect } from "react";
-import { fetchMenuByCategory } from "../slice/dishSlice";
+// import { fetchMenuByCategory } from "../slice/dishSlice";
 import { Link, useParams } from "react-router-dom";
 import Item from "../components/Item";
 import Footer from "../components/Footer";
@@ -18,7 +18,7 @@ function Category() {
     (state) => state.dishes
   );
   useEffect(() => {
-    dispatch(fetchMenuByCategory(id));
+    // dispatch(fetchMenuByCategory(id));
   }, [dispatch, id]);
   console.log(categoriesWithDishes);
 

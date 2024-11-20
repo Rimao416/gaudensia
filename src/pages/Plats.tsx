@@ -8,7 +8,7 @@ function Plats() {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { singleDish, loading, error } = useAppSelector(
+  const { loading, error } = useAppSelector(
     (state) => state.dishes
   );
   useEffect(() => {
