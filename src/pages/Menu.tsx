@@ -69,16 +69,29 @@ function Menu() {
               initial={{ opacity: 0 }} // invisible au départ
               animate={{ opacity: 0.5 }} // devient semi-transparent lorsque modal visible
               exit={{ opacity: 0 }} // disparaît lorsque le modal est fermé
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }} // animation plus rapide
             />
+
             <motion.div
               className="recherche"
               initial={{ top: "-100%" }} // initial position off-screen
               animate={{ top: 0 }} // animate to top of the page
               exit={{ top: "-100%" }} // animate out off-screen
-              transition={{ type: "spring", stiffness: 100, damping: 25 }}
+              transition={{ type: "spring", stiffness: 200, damping: 30 }} // animation plus rapide
             >
-              <h1>SALUT</h1>
+              <div className="recherche__container">
+                <div className="recherche__wrapper">
+                  <FaSearch className="recherche__icon" />
+                  <input
+                    className="recherche__input"
+                    type="text"
+                    placeholder="Rechercher un plat dans le menu"
+                  />
+                </div>
+                <span>
+                  <FaSearch className="recherche__button" />
+                </span>
+              </div>
             </motion.div>
           </>
         )}
