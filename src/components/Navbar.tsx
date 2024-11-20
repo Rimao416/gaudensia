@@ -40,13 +40,13 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleCartClick = () => {
-    if (window.innerWidth < 768) {
-      setSheetOpen(true); // Ouvre le BottomSheet en mode mobile
-    } else {
-      setOverlayVisible(true); // Affiche l'overlay sur desktop
-    }
-  };
+  // const handleCartClick = () => {
+  //   if (window.innerWidth < 768) {
+  //     setSheetOpen(true); // Ouvre le BottomSheet en mode mobile
+  //   } else {
+  //     setOverlayVisible(true); // Affiche l'overlay sur desktop
+  //   }
+  // };
 
   const menuItems = [
     { label: "Accueil", link: "/" },

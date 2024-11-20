@@ -7,6 +7,7 @@ import Menu from "./pages/Menu";
 import useUserData from "./components/userData";
 import Category from "./pages/Category";
 import Plats from "./pages/Plats";
+import Checkout from "./pages/Checkout";
 function App() {
   useUserData();
   return (
@@ -14,8 +15,10 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/a-propos" element={<About />} />
       <Route path="/menu" element={<Menu />} />
+      <Route path="/checkout" element={<Checkout />} />
+
       <Route path="/menu/:id" element={<Category />} />
-      <Route path="/plats/:id" element={<Plats/>}/>
+      <Route path="/plats/:id" element={<Plats />} />
     </Routes>
   );
 }

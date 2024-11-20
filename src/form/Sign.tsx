@@ -10,6 +10,7 @@ import { IoClose } from "react-icons/io5";
 import { user } from "../interface/user";
 import LoadingSpinner from "../constants/loader";
 import LineWaveSpinner from "../components/LineWaveSpinenr";
+import GetCurrentLocation from "../components/Location";
 // Schéma de validation
 
 function Sign() {
@@ -22,13 +23,11 @@ function Sign() {
   const { errors } = useAppSelector((state) => state.auth);
 
   const [credentials, setCredentials] = useState({
-
     fullName: "",
     email: "",
     password: "",
     address: "",
     phoneNumber: "",
-
   });
 
   const validationSchema = Joi.object({
@@ -101,42 +100,6 @@ function Sign() {
     }
   };
 
-  const handleGetCurrentLocation = () => {
-    if (navigator.geolocation) {
-      setLoadingAddress(true); // Mettre à jour l'état de chargement
-
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          const geocodeAPI = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
-
-          try {
-            const response = await fetch(geocodeAPI);
-            const data = await response.json();
-            const userAddress = data.display_name;
-
-            setCredentials((prev) => ({ ...prev, address: userAddress }));
-          } catch (error) {
-            console.error(
-              "Erreur lors de la récupération de l'adresse:",
-              error
-            );
-          } finally {
-            setLoadingAddress(false); // Réinitialiser l'état de chargement
-          }
-        },
-        (error) => {
-          console.error("Erreur de géolocalisation:", error);
-          alert("Impossible de récupérer votre position.");
-          setLoadingAddress(false); // Réinitialiser l'état de chargement en cas d'erreur
-        }
-      );
-    } else {
-      alert("La géolocalisation n'est pas supportée par votre navigateur.");
-      setLoadingAddress(false); // Réinitialiser l'état de chargement si la géolocalisation est non supportée
-    }
-  };
-
   //   const [errors, setErrors] = useState<{ [key: string]: string | null }>({});
   const [showErrors, setShowErrors] = useState<{ [key: string]: boolean }>({});
 
@@ -162,7 +125,7 @@ function Sign() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(credentials)
+    console.log(credentials);
     e.preventDefault();
     if (handleValidation()) {
       const response = await dispatch(sign(credentials));
@@ -183,6 +146,9 @@ function Sign() {
 
     return () => timers.forEach(clearTimeout);
   }, [showErrors]);
+  const handleLocationRetrieved = (address: string) => {
+    setCredentials((prev) => ({ ...prev, address }));
+  };
 
   return (
     <>
@@ -237,23 +203,7 @@ function Sign() {
             defaultValue={credentials.address}
             onChange={handleChange}
           />
-          <div style={{display:"flex",justifyContent:"space-between"}}>
-          <p
-            style={{
-              color: "#00A082",
-              fontSize: "12px",
-              textAlign: "left",
-              cursor: "pointer",
-            }}
-            onClick={handleGetCurrentLocation}
-          >
-            Utiliser ma position{" "}
-          </p>
-
-
-          <LineWaveSpinner visible={loadingAddress}/>
-        
-          </div>
+          <GetCurrentLocation onLocationRetrieved={handleLocationRetrieved} />
         </div>
         <div>
           <input
