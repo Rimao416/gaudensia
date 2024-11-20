@@ -15,6 +15,8 @@ interface CartState {
   errors: {
     [key: string]: string | null;
   } | null;
+  allergies: string;
+  totalPrice:number;
 }
 
 const initialState: CartState = {
@@ -24,24 +26,25 @@ const initialState: CartState = {
     deliveryAddress: "",
     deliveryDetails: "",
   },
+  allergies: "",
+  totalPrice:0
 };
 
 // Créez un thunk pour l'ajout d'un article au panier en base de données
 export const addItemToCartDb = createAsyncThunk(
   "cart/addItemToCartDb",
-  async (item: CartItem, { rejectWithValue }) => {
+  async (cart: Partial<CartState>, { rejectWithValue }) => {  // Utilisation de Partial<CartState>
     try {
-      const token = Cookies.get("token");
+      const token = Cookies.get("accessToken");
       API.defaults.withCredentials = true;
       API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      const response = await API.post("/cart", item);
+      const response = await API.post("/cart", cart);
       return response.data; // Si tout va bien, renvoyer la réponse
     } catch (error) {
       return rejectWithValue(error); // Retourner l'erreur si elle se produit
     }
   }
 );
-
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -59,9 +62,11 @@ const cartSlice = createSlice({
           price: action.payload.price * action.payload.quantity, // Calcul du prix total
         });
       }
+      state.totalPrice = state.items.reduce((sum, item) => sum + item.price, 0);
     },
     removeItemFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((i) => i.id !== action.payload);
+      state.totalPrice = state.items.reduce((sum, item) => sum + item.price, 0);
     },
     clearCart: (state) => {
       state.items = [];
@@ -72,6 +77,7 @@ const cartSlice = createSlice({
         item.quantity += 1;
         item.price = (item.price / (item.quantity - 1)) * item.quantity; // Mettre à jour le prix total
       }
+      state.totalPrice = state.items.reduce((sum, item) => sum + item.price, 0);
     },
     decrementItemQuantity: (state, action: PayloadAction<string>) => {
       const item = state.items.find((i) => i.id === action.payload);
@@ -81,12 +87,16 @@ const cartSlice = createSlice({
       } else if (item && item.quantity === 1) {
         state.items = state.items.filter((i) => i.id !== action.payload);
       }
+      state.totalPrice = state.items.reduce((sum, item) => sum + item.price, 0);
     },
     setErrors: (
       state,
       action: PayloadAction<{ [key: string]: string | null }>
     ) => {
       state.errors = action.payload;
+    },
+    setAllergies: (state, action: PayloadAction<string>) => {
+      state.allergies = action.payload; // Met à jour la chaîne des allergies globales
     },
   },
   extraReducers: (builder) => {
@@ -112,6 +122,7 @@ export const {
   incrementItemQuantity,
   decrementItemQuantity,
   setErrors,
+  setAllergies,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

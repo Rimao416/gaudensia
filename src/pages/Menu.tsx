@@ -11,6 +11,7 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import { Navigation } from "swiper/modules";
 import { truncateTitle } from "../utils";
 import { getCategories } from "../slice/categorySlice";
+import { FaSearch } from "react-icons/fa";
 import Item from "../components/Item";
 import Shopping from "../assets/shopping.png";
 import {
@@ -58,6 +59,9 @@ function Menu() {
         <div className="table">
           <div className="table__body">
             <div className="table__header">
+              <div className="table__dropdown">
+                <FaSearch className="table__icondrop" />
+              </div>
               <div className="table__search">
                 <IoMdSearch className="table__icon" />
                 <input type="text" placeholder="Rechercher" />
@@ -67,6 +71,16 @@ function Menu() {
                 modules={[Navigation]}
                 slidesPerView={4}
                 spaceBetween={40}
+                breakpoints={{
+                  0: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                  },
+                  768: {
+                    slidesPerView: 4,
+                    spaceBetween: 40,
+                  },
+                }}
               >
                 {categories &&
                   categories.map((category) => (
@@ -105,7 +119,7 @@ function Menu() {
                     <h3>Votre Commande</h3>
                     <div className="table__order--box">
                       {items.map((item) => (
-                        <div className="table__order--wrapper">
+                        <div className="table__order--wrapper" key={item.id}>
                           <ul className="table__order--list">
                             <li key={item.id} className="table__order--item">
                               <div className="table__order--details">
