@@ -4,6 +4,7 @@ import { IoMdSearch } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useEffect, useState } from "react";
 import { fetchMenuByCategories } from "../slice/dishSlice";
+import { motion } from "framer-motion";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -38,7 +39,11 @@ function Menu() {
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId); // Définir la catégorie active
   };
+  const [isModalVisible, setModalVisible] = useState(false);
 
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
   useEffect(() => {
     dispatch(fetchMenuByCategories());
     dispatch(getCategories());
@@ -55,14 +60,38 @@ function Menu() {
 
   return (
     <>
-      <div>
+      <div className="parent">
         <Navbar />
+        {isModalVisible && (
+          <>
+            <motion.div
+              className="overlay"
+              initial={{ opacity: 0 }} // invisible au départ
+              animate={{ opacity: 0.5 }} // devient semi-transparent lorsque modal visible
+              exit={{ opacity: 0 }} // disparaît lorsque le modal est fermé
+              transition={{ duration: 0.3 }}
+            />
+            <motion.div
+              className="recherche"
+              initial={{ top: "-100%" }} // initial position off-screen
+              animate={{ top: 0 }} // animate to top of the page
+              exit={{ top: "-100%" }} // animate out off-screen
+              transition={{ type: "spring", stiffness: 100, damping: 25 }}
+            >
+              <h1>SALUT</h1>
+            </motion.div>
+          </>
+        )}
+
+        {/* Le modal */}
         <div className="table">
           <div className="table__up">
             <div className="table__up--text">
               <h1>À Table !</h1>
               <p>
-              Venez découvrir un menu savoureux, où chaque plat est une invitation à la gourmandise. Explorez nos recettes, choisissez vos favoris et régalez-vous en un clin d'œil !
+                Venez découvrir un menu savoureux, où chaque plat est une
+                invitation à la gourmandise. Explorez nos recettes, choisissez
+                vos favoris et régalez-vous en un clin d'œil !
               </p>
               <p className="cart">Voir les commandes en cours</p>
             </div>
@@ -82,7 +111,7 @@ function Menu() {
           </div>
           <div className="table__body">
             <div className="table__header">
-              <div className="table__dropdown">
+              <div className="table__dropdown" onClick={toggleModal}>
                 <FaSearch className="table__icondrop" />
               </div>
               <div className="table__search">
