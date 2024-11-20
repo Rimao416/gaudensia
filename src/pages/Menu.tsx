@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import { IoMdSearch } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useEffect, useState } from "react";
-import { fetchMenuByCategories } from "../slice/dishSlice";
+import { fetchMenuByCategories, searchDish } from "../slice/dishSlice";
 import { motion } from "framer-motion";
 
 import "swiper/css";
@@ -13,7 +13,7 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import { Navigation } from "swiper/modules";
 import { truncateTitle } from "../utils";
 import { getCategories } from "../slice/categorySlice";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import Item from "../components/Item";
 import Shopping from "../assets/shopping.png";
 import {
@@ -25,7 +25,10 @@ import { useMessages } from "../context/useMessage";
 import OrderModal from "../components/OrderModal";
 function Menu() {
   const dispatch = useAppDispatch();
-  const { categoriesWithDishes } = useAppSelector((state) => state.dishes);
+  const { categoriesWithDishes, searchResults } = useAppSelector(
+    (state) => state.dishes
+  );
+  console.log(searchResults.length)
   const { categories } = useAppSelector((state) => state.categories);
   const { items } = useAppSelector((state) => state.cart);
   const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
@@ -35,7 +38,8 @@ function Menu() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [activeCategory, setActiveCategory] = useState<string>("all"); // "all" actif par défaut
-
+  const [search, setSearch] = useState<string>("");
+  const [isSearching, setIsSearching] = useState(false); // Nouvel état
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId); // Définir la catégorie active
   };
@@ -56,6 +60,18 @@ function Menu() {
     } else {
       setIsModalOpen(true);
     }
+  };
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const response = await dispatch(searchDish(search)).unwrap();
+    console.log(response);
+
+    // Si la recherche renvoie des résultats, active l'état `isSearching`
+    if (response) {
+      setIsSearching(true);
+    } 
+
+    // Check if user is connected
   };
 
   return (
@@ -79,19 +95,24 @@ function Menu() {
               exit={{ top: "-100%" }} // animate out off-screen
               transition={{ type: "spring", stiffness: 200, damping: 30 }} // animation plus rapide
             >
-              <div className="recherche__container">
+              <form className="recherche__container" onSubmit={handleSearch}>
+                {/* Container pour l'input et l'icône */}
                 <div className="recherche__wrapper">
-                  <FaSearch className="recherche__icon" />
                   <input
                     className="recherche__input"
                     type="text"
                     placeholder="Rechercher un plat dans le menu"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                   />
+                  {/* Icône de recherche à côté de l'input */}
+                  <button type="submit" className="recherche__icon">
+                    <FaSearch />
+                  </button>
                 </div>
-                <span>
-                  <FaSearch className="recherche__button" />
-                </span>
-              </div>
+                {/* Icône pour fermer le modal */}
+                <FaTimes className="recherche__close" onClick={toggleModal} />
+              </form>
             </motion.div>
           </>
         )}
@@ -165,19 +186,41 @@ function Menu() {
               </Swiper>
             </div>
             <div className="table__wrapper">
-              <div className="table__container">
-                {categoriesWithDishes &&
-                  categoriesWithDishes.map((category) => (
-                    <div key={category.category._id} className="table__content">
-                      <h2>{category.category.name}</h2>
-                      <div className="table__items">
-                        {category.dishes.map((dish) => (
-                          <Item key={dish._id} {...dish} />
-                        ))}
-                      </div>
+              {isSearching ? (
+                <div className="table__container">
+                  <div className="table__response">
+                
+                    <h1>Résultat de recherche pour "{search}"</h1>
+                    {/* Parcourir les résultats de recherche */}
+                    <div className="table__items">
+                      {searchResults.length != 0 ? (
+                        searchResults.map((dish) => <Item key={dish._id} {...dish} />)
+                      ) : (
+                        <p>Aucun résultat trouvé pour "{search}".</p>
+                      )}
                     </div>
-                  ))}
-              </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="table__container">
+                  {/* Affichage par catégories lorsque la recherche n'est pas active */}
+                  {categoriesWithDishes &&
+                    categoriesWithDishes.map((category) => (
+                      <div
+                        key={category.category._id}
+                        className="table__content"
+                      >
+                        <h2>{category.category.name}</h2>
+                        <div className="table__items">
+                          {category.dishes.map((dish) => (
+                            <Item key={dish._id} {...dish} />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+
               <div className="table__order">
                 {items.length > 0 ? ( // Si le panier contient des éléments
                   <>

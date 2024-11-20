@@ -11,6 +11,8 @@ interface CategoryWithDishes {
 }
 interface DishState {
   dishes: dishes[];
+  searchResults: dishes[];
+
   singleDish: dishes | null; // Un attribut pour stocker un plat unique
   categoriesWithDishes: CategoryWithDishes[];
   loading: boolean;
@@ -18,6 +20,7 @@ interface DishState {
 }
 const initialState: DishState = {
   dishes: [],
+  searchResults: [],
   categoriesWithDishes: [],
   loading: false,
   error: null,
@@ -43,7 +46,7 @@ export const fetchMenuByCategories = createAsyncThunk(
       const response = await API.get("/dishes/getMenuCategories");
       return response.data; // Assure-toi que la réponse soit dans le format attendu
     } catch (error: unknown) {
-      console.log(error)
+      console.log(error);
       if (error instanceof Error) {
         return rejectWithValue(error.message);
       }
@@ -85,6 +88,21 @@ export const fetchSingleDish = createAsyncThunk(
   }
 );
 
+export const searchDish = createAsyncThunk(
+  "dishes/searchDish",
+  async (searchTerm: string, { rejectWithValue }) => {
+    try {
+      const response = await API.get("/dishes?search=" + searchTerm);
+      return response.data;
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Erreur inconnue");
+    }
+  }
+);
+
 const dishSlice = createSlice({
   name: "dish",
   initialState,
@@ -100,6 +118,18 @@ const dishSlice = createSlice({
         state.dishes = action.payload;
       })
       .addCase(getDishes.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Something went wrong!";
+      })
+      .addCase(searchDish.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchDish.fulfilled, (state, action) => {
+        state.loading = false;
+        state.searchResults = action.payload;
+      })
+      .addCase(searchDish.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Something went wrong!";
       })
