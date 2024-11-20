@@ -4,6 +4,7 @@ import { IoMdSearch } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useEffect, useState } from "react";
 import { fetchMenuByCategories } from "../slice/dishSlice";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -57,6 +58,28 @@ function Menu() {
       <div>
         <Navbar />
         <div className="table">
+          <div className="table__up">
+            <div className="table__up--text">
+              <h1>À Table !</h1>
+              <p>
+              Venez découvrir un menu savoureux, où chaque plat est une invitation à la gourmandise. Explorez nos recettes, choisissez vos favoris et régalez-vous en un clin d'œil !
+              </p>
+              <p className="cart">Voir les commandes en cours</p>
+            </div>
+            <div className="custom-shape-divider-bottom-1732082832">
+              <svg
+                data-name="Layer 1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 1200 120"
+                preserveAspectRatio="none"
+              >
+                <path
+                  d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
+                  className="shape-fill"
+                ></path>
+              </svg>
+            </div>
+          </div>
           <div className="table__body">
             <div className="table__header">
               <div className="table__dropdown">

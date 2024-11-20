@@ -228,9 +228,7 @@ function Home() {
           </AnimatePresence>
         </div>
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <Button type="outline" onClick={() => {}}>
-            <Link to="/menu">Voir tous nos plats</Link>
-          </Button>
+            <Link to="/menu" className="link link__outline">Voir tous nos plats</Link>
         </div>
       </section>
       <section className="testimonials">

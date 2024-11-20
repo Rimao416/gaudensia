@@ -1,5 +1,53 @@
 .table {
     padding: $main-padding;
+    &__up{
+        position: relative;
+        width: calc(100% + #{$main-padding * 2}); // Compense les paddings gauche et droite
+        margin-left: -$main-padding; // Annule le padding gauche
+        margin-right: -$main-padding; // Annule le padding droit
+        padding: 0; // Supprime tout padding de cet élément
+        height: 25vh;
+        background-color: $yellow-color;
+        &--text{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: $main-padding;
+
+
+            
+            
+            z-index: 100;
+            p{
+                font-size: 14px;
+                line-height: 1.2;
+                &:first-child{
+                    color: #222;
+                }
+                &:last-child{
+                    color: $green-color;
+                    display: none;
+                }
+                
+                
+            }
+        }
+        @include responsive("mobile") {
+            width: calc(100% + #{$respo-padding * 2});
+            margin-left: -$respo-padding;
+            margin-right: -$respo-padding;
+            &--text{
+                padding: $respo-padding;
+                p{
+                    &:last-child{
+                        display: block;
+                    }
+                }
+            }
+            
+
+          }
+    }
   
     &__header {
       width: 100% !important;
@@ -13,6 +61,9 @@
       gap: 15px;
       height: 40px;
       z-index: 10; /* Pour éviter que le header soit caché par d'autres éléments */
+    }
+    &__body{
+        margin-top: 40px;
     }
   
     &__search {
@@ -161,6 +212,14 @@
         display: none;
     }
 
+  }
+  .container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    z-index: -1;
+    opacity: .5;
   }
   @include responsive("mobile"){
     .table{

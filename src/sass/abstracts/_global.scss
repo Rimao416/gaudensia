@@ -282,3 +282,33 @@ a{
     }
   }
 }
+
+
+.custom-shape-divider-bottom-1732082832 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+    @include responsive('mobile'){
+    display: none;
+}
+
+  
+}
+
+.custom-shape-divider-bottom-1732082832 svg {
+  position: relative;
+  display: block;
+  width: calc(182% + 1.3px);
+  height: 432px;
+  
+}
+
+.custom-shape-divider-bottom-1732082832 .shape-fill {
+  fill: $yellow-color;
+//   @include responsive('mobile'){
+//     display: none;
+// }
+}
