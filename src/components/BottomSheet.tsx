@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { Sheet } from "react-modal-sheet";
 
 interface BottomSheetProps {
@@ -14,18 +14,19 @@ interface BottomSheetProps {
 const BottomSheet: React.FC<BottomSheetProps> = React.memo(({
   isOpen,
   onClose,
-  snapPoints = [400, 0], // Moins de snap points pour améliorer les performances
+  snapPoints = [400], // Moins de snap points pour améliorer les performances
   initialSnap = 0,
   children,
-  draggableAt = "both",
+  draggableAt = "top",
   paddingBottom = 0,
 }) => {
-  useEffect(() => {
-    if (isOpen) {
-      console.log("BottomSheet ouvert");
-      // Effectuer des tâches spécifiques lors de l'ouverture, si nécessaire
-    }
-  }, [isOpen]);
+
+
+  // const handleSnap = (index: number) => {
+  //   if (index === snapPoints.length - 1) { // Si la position finale est la dernière (ex: 0)
+  //     onClose(); // Ferme la feuille et met `isOpen` à false
+  //   }
+  // };
 
   return (
     <Sheet
@@ -33,14 +34,15 @@ const BottomSheet: React.FC<BottomSheetProps> = React.memo(({
       onClose={onClose}
       snapPoints={snapPoints}
       initialSnap={initialSnap}
+      // onSnap={handleSnap} // Correction : utilisation de `onSnap` au lieu de `onSnapEnd`
     >
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content
           style={{
             paddingBottom: `${paddingBottom}px`,
-            paddingRight:"20px",
-            paddingLeft:"20px",
+            paddingRight: "20px",
+            paddingLeft: "20px",
             willChange: "transform, opacity", // Accélération matérielle
           }}
         >

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { API } from "../config";
 import Cookies from "js-cookie";
 
-interface CartItem {
+export interface CartItem {
   id: string;
   name: string;
   price: number;

@@ -23,12 +23,14 @@ import {
 import { useAuthOverlay } from "../context/useAuthOverlay";
 import { useMessages } from "../context/useMessage";
 import OrderModal from "../components/OrderModal";
+import BottomCart from "../components/BottomCart";
 function Menu() {
   const dispatch = useAppDispatch();
   const { categoriesWithDishes, searchResults } = useAppSelector(
     (state) => state.dishes
   );
-  console.log(searchResults.length)
+  const [isBottomCartOpen, setIsBottomCartOpen] = useState(false);
+  console.log(searchResults.length);
   const { categories } = useAppSelector((state) => state.categories);
   const { items } = useAppSelector((state) => state.cart);
   const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
@@ -69,7 +71,7 @@ function Menu() {
     // Si la recherche renvoie des résultats, active l'état `isSearching`
     if (response) {
       setIsSearching(true);
-    } 
+    }
 
     // Check if user is connected
   };
@@ -127,7 +129,13 @@ function Menu() {
                 invitation à la gourmandise. Explorez nos recettes, choisissez
                 vos favoris et régalez-vous en un clin d'œil !
               </p>
-              <p className="cart">Voir les commandes en cours</p>
+              <p
+                className="cart"
+                style={{ cursor: "pointer" }}
+                onClick={() => setIsBottomCartOpen(true)}
+              >
+                Voir les commandes en cours
+              </p>
             </div>
             <div className="custom-shape-divider-bottom-1732082832">
               <svg
@@ -189,12 +197,13 @@ function Menu() {
               {isSearching ? (
                 <div className="table__container">
                   <div className="table__response">
-                
                     <h1>Résultat de recherche pour "{search}"</h1>
                     {/* Parcourir les résultats de recherche */}
                     <div className="table__items">
                       {searchResults.length != 0 ? (
-                        searchResults.map((dish) => <Item key={dish._id} {...dish} />)
+                        searchResults.map((dish) => (
+                          <Item key={dish._id} {...dish} />
+                        ))
                       ) : (
                         <p>Aucun résultat trouvé pour "{search}".</p>
                       )}
@@ -281,10 +290,30 @@ function Menu() {
             </div>
           </div>
         </div>
+        {items.length > 0 && (
+          <button
+            className="button button__outline table__order--responsive"
+            style={{
+              position: "fixed",
+              bottom: "1rem",
+              textAlign: "center",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "80%",
+            }}
+            onClick={handleSubmit}
+          >
+            Confirmer pour {totalPrice} PLN
+          </button>
+        )}
+
         <Footer />
       </div>
       {isModalOpen && (
         <OrderModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      )}
+      {isBottomCartOpen && (
+        <BottomCart isOpen={isBottomCartOpen} onClose={setIsBottomCartOpen} items={items} />
       )}
     </>
   );

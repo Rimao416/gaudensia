@@ -268,6 +268,9 @@
         border-radius: 8px;
 
       }
+      &--responsive{
+        display: none;
+      }
       &--wrapper{
         border-bottom: 1px solid #e2e2e2;
         display: flex;
@@ -334,6 +337,9 @@
           }
         &__order{
             display: none;
+            &--responsive{
+                display: block;
+            }
         }
         &__container{
             flex-basis: 100%;
