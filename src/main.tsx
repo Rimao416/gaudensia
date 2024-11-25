@@ -9,7 +9,7 @@ import { OverlayProvider } from "./context/OverlayContext";
 import { AuthOverlayProvider } from "./context/AuthOverlayContext.tsx";
 import "react-phone-number-input/style.css";
 import { MessageProvider } from "./context/NotificationContext.tsx";
-
+import "./i18n.ts"
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>

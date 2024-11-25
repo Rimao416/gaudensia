@@ -3,6 +3,10 @@
     display: flex;
     justify-content: space-between;
     gap: 20px;
+    @include responsive('mobile'){
+        flex-direction: column;
+        padding: $respo-padding;
+    }
   
     &__details {
       flex: 2;

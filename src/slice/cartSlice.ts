@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { API } from "../config";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 export interface CartItem {
   id: string;
@@ -11,12 +12,14 @@ export interface CartItem {
 
 interface CartState {
   items: CartItem[];
+  deliveryAddress: string;
+  deliveryDetails: string;
   status: "idle" | "loading" | "succeeded" | "failed";
   errors: {
     [key: string]: string | null;
   } | null;
   allergies: string;
-  totalPrice:number;
+  totalPrice: number;
 }
 
 const initialState: CartState = {
@@ -27,13 +30,16 @@ const initialState: CartState = {
     deliveryDetails: "",
   },
   allergies: "",
-  totalPrice:0
+  totalPrice: 0,
+  deliveryAddress: "",
+  deliveryDetails: "",
 };
 
 // Créez un thunk pour l'ajout d'un article au panier en base de données
 export const addItemToCartDb = createAsyncThunk(
   "cart/addItemToCartDb",
-  async (cart: Partial<CartState>, { rejectWithValue }) => {  // Utilisation de Partial<CartState>
+  async (cart: Partial<CartState>, { rejectWithValue }) => {
+    // Utilisation de Partial<CartState>
     try {
       const token = Cookies.get("accessToken");
       API.defaults.withCredentials = true;
@@ -41,7 +47,10 @@ export const addItemToCartDb = createAsyncThunk(
       const response = await API.post("/cart", cart);
       return response.data; // Si tout va bien, renvoyer la réponse
     } catch (error) {
-      return rejectWithValue(error); // Retourner l'erreur si elle se produit
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data);
+      }
+      return rejectWithValue("Erreur inconnue");
     }
   }
 );
@@ -98,15 +107,27 @@ const cartSlice = createSlice({
     setAllergies: (state, action: PayloadAction<string>) => {
       state.allergies = action.payload; // Met à jour la chaîne des allergies globales
     },
+    setLocation: (
+      state,
+      action: PayloadAction<{
+        deliveryAddress: string;
+        deliveryDetails: string;
+      }>
+    ) => {
+      console.log(action.payload);
+      state.deliveryAddress = action.payload.deliveryAddress;
+      state.deliveryDetails = action.payload.deliveryDetails;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(addItemToCartDb.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(addItemToCartDb.fulfilled, (state, action) => {
+      .addCase(addItemToCartDb.fulfilled, (state) => {
         state.status = "succeeded";
-        console.log(action.payload); // Traitez ici la réponse reçue
+        state.items = [];
+        state.totalPrice = 0;
       })
       .addCase(addItemToCartDb.rejected, (state, action) => {
         state.status = "failed";
@@ -123,6 +144,7 @@ export const {
   decrementItemQuantity,
   setErrors,
   setAllergies,
+  setLocation,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

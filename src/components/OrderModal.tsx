@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal"; // Assurez-vous que le chemin d'importation du composant Modal est correct.
 import Joi from "joi";
-import { setErrors } from "../slice/cartSlice";
+import {  setErrors, setLocation } from "../slice/cartSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import GetCurrentLocation from "./Location";
-
+import {  useNavigate } from "react-router-dom";
 interface OrderModalProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
 }
 
 function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
+  const navigate=useNavigate();
+  const user = useAppSelector((state) => state.auth.user);
+  const [credentials, setCredentials] = useState({
+    deliveryAddress: "",
+    deliveryDetails: "",
+  });
   const dispatch = useAppDispatch();
   const { errors } = useAppSelector((state) => state.cart);
   const [showErrors, setShowErrors] = useState<{ [key: string]: boolean }>({});
@@ -32,13 +38,16 @@ function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
 
     return () => timers.forEach(clearTimeout);
   }, [showErrors]);
+  useEffect(() => {
+    setCredentials((prev) => ({
+      ...prev,
+      deliveryAddress: user?.address || "", // Fournir une valeur par défaut vide
+    }));
+  }, [user]);
   const handleClose = () => {
     setIsModalOpen(false);
   };
-  const [credentials, setCredentials] = useState({
-    deliveryAddress: "",
-    deliveryDetails: "",
-  });
+
   const handleValidation = () => {
     const { deliveryAddress, deliveryDetails } = credentials; // Récupérer les valeurs de l'état credentials
     const { error } = validationSchema.validate(
@@ -64,9 +73,13 @@ function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(credentials)
 
     if (handleValidation()) {
-      console.log("Salut");
+      const response=await dispatch(setLocation(credentials));
+      console.log(response)
+      if(response)
+      navigate("/checkout", { replace: true }); // Remplace l'entrée actuelle dans l'historique
     }
   };
   const handleLocationRetrieved = (address: string) => {
@@ -101,7 +114,7 @@ function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
               className={`overlay__input ${
                 errors && errors.deliveryDetails ? "input-error" : ""
               }`}
-              name="password"
+              name="deliveryDetails"
               defaultValue={credentials.deliveryDetails}
               onChange={handleChange}
             />

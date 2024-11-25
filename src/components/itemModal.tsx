@@ -7,6 +7,7 @@ import Modal from "./Modal";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { addItemToCart } from "../slice/cartSlice";
 import { IoClose } from "react-icons/io5";
+import { useMessages } from "../context/useMessage";
 
 interface ItemModalProps {
   data: dishes;
@@ -14,7 +15,7 @@ interface ItemModalProps {
 }
 
 const ItemModal: React.FC<ItemModalProps> = ({ data, onClose }) => {
-  console.log(data);
+  const { setMessage } = useMessages();
   const [isMobile, setIsMobile] = useState(false);
   const dispatch = useDispatch();
 
@@ -35,8 +36,8 @@ const ItemModal: React.FC<ItemModalProps> = ({ data, onClose }) => {
   }, []);
 
   // Ajoute l'article au panier
-  const handleAddToCart = () => {
-    dispatch(
+  const handleAddToCart =async () => {
+    await dispatch(
       addItemToCart({
         id: data._id,
         name: data.name,
@@ -44,6 +45,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ data, onClose }) => {
         quantity,
       })
     );
+    setMessage("Article ajouté au panier", "success");
   };
 
   return (

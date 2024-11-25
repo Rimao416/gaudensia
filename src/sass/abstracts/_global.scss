@@ -50,8 +50,9 @@ a{
 }
 
 .notifications {
-    position: absolute;
-    top: $main-padding;
+    position: fixed;
+    // top: $main-padding;
+    top:0;
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;

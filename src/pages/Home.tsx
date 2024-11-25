@@ -2,7 +2,6 @@ import Navbar from "../components/Navbar";
 import aniomationData from "../assets/animation.json";
 import Testimonials from "../assets/testimonial.png";
 import Lottie from "lottie-react";
-import { WHY_CHOOSE_US } from "../constants/data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -22,6 +21,8 @@ import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import { getTestimonials } from "../slice/testimonialSlice";
 import Footer from "../components/Footer";
+import { useTranslation } from "react-i18next";
+import useWhyChooseUs from "../components/useWhyChooseUs";
 
 const getRandomDishes = (dishes: dishes[], count = 6) => {
   // Crée une copie du tableau de plats pour ne pas muter l'original
@@ -31,6 +32,8 @@ const getRandomDishes = (dishes: dishes[], count = 6) => {
 };
 
 function Home() {
+  const { t } = useTranslation();
+  const  whyChooseUs  = useWhyChooseUs();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Null = Tous
   const { categories } = useAppSelector((state) => state.categories);
   const dispatch = useAppDispatch();
@@ -59,17 +62,12 @@ function Home() {
       <div className="header">
         <img src={Testimonials} alt="" className="header__testimonial" />
         <div className="header__wrapper">
-          <h1>Savourez sans bouger</h1>
-          <p>
-            Savourez vos plats préférés sans quitter votre domicile. Profitez de
-            repas délicieux livrés directement à votre porte, pour un moment de
-            plaisir sans effort. Commandez maintenant et dégustez le meilleur de
-            la cuisine, confortablement installé chez vous.
-          </p>
+          <h1>{t("homeTitle")}</h1>
+          <p>{t("homeSubTitle")}</p>
 
           <div className="header__button">
             <button className="button button__outline">
-              Consulter le menu
+              {t("homeButton")}
             </button>
           </div>
         </div>
@@ -95,7 +93,7 @@ function Home() {
         </div>
       </div>
       <section className="why">
-        {WHY_CHOOSE_US.map((item) => (
+        {whyChooseUs.map((item) => (
           <div className="why__item" key={item.title}>
             <img src={item.image} alt={item.title} />
             <div className="why__text">
@@ -106,7 +104,7 @@ function Home() {
         ))}
       </section>
       <section className="daily">
-        <h1>Vous aimeriez peut-être</h1>
+        <h1>{t("shouldLike")}</h1>
 
         <Swiper
           onSwiper={(swiper) => {
@@ -228,7 +226,9 @@ function Home() {
           </AnimatePresence>
         </div>
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <Link to="/menu" className="link link__outline">Voir tous nos plats</Link>
+          <Link to="/menu" className="link link__outline">
+            Voir tous nos plats
+          </Link>
         </div>
       </section>
       <section className="testimonials">

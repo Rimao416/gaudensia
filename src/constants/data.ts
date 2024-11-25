@@ -1,6 +1,4 @@
-import Livraison from "../assets/livraison.png"
-import Fast from "../assets/fast-food.png"
-import Chef from "../assets/chef.png"
+
 // Définition d'un type pour un plat unique
 interface Dish {
   name: string; // Nom du plat
@@ -556,28 +554,3 @@ export const myMenu: Menu = {
   ],
 };
 
-// WHY CHOOSE US
-interface WhyChooseUs {
-  title: string;
-  description: string;
-  image: string;
-}
-
-export const WHY_CHOOSE_US: WhyChooseUs[] = [
-  {
-    title: "Livraison gratuite 24/7",
-    description: "Livraison offerte pour toute commande supérieure à 100€.",
-    image: Livraison,
-  },
-  {
-    title: "Chef de renommée",
-    description: "Des plats préparés par un chef primé.",
-    image: Chef,
-  },
-  {
-    title: "Des aliments frais et sains",
-    description: "Des produits frais et équilibrés, à votre table.",
-    image: Fast,
-  },
-
-];

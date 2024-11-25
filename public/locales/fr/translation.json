@@ -1,0 +1,20 @@
+{
+    "homeTitle":"Savourez sans bouger",
+    "homeSubTitle":"Savourez vos plats préférés sans quitter votre domicile. Profitez de repas délicieux livrés directement à votre porte, pour un moment de plaisir sans effort. Commandez maintenant et dégustez le meilleur de la cuisine, confortablement installé chez vous.",
+    "homeButton":"Consulter le menu",
+    "whyChooseUs": {
+        "freeDelivery": {
+          "title": "Livraison gratuite 24/7",
+          "description": "Livraison offerte pour toute commande supérieure à 100€."
+        },
+        "renownedChef": {
+          "title": "Chef de renommée",
+          "description": "Des plats préparés par un chef primé."
+        },
+        "freshFood": {
+          "title": "Des aliments frais et sains",
+          "description": "Des produits frais et équilibrés, à votre table."
+        }
+      },
+      "shouldLike":"Vous aimeriez peut-être"
+  }

@@ -4,12 +4,22 @@ import {
   decrementItemQuantity,
   incrementItemQuantity,
 } from "../slice/cartSlice";
+import { FaArrowLeft } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { IoIosArrowForward } from "react-icons/io";
 import AllergiaModal from "../components/AllergiaModal";
-
+import { useMessages } from "../context/useMessage";
+import { useNavigate } from "react-router-dom";
+import MessageDisplay from "../components/MessageDisplay";
 function Checkout() {
-  const { items,allergies } = useAppSelector((state) => state.cart);
+  interface ErrorType extends Error {
+    message: string;
+  }
+  const navigate = useNavigate();
+  const { setMessage } = useMessages();
+  const { items, allergies, deliveryAddress, deliveryDetails } = useAppSelector(
+    (state) => state.cart
+  );
   const dispatch = useAppDispatch();
   const totalPrice = useMemo(() => {
     return items.reduce((sum, item) => sum + item.price, 0);
@@ -17,20 +27,35 @@ function Checkout() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOrder = async () => {
     try {
-      const response = await dispatch(addItemToCartDb({ items, totalPrice, allergies })).unwrap();
-      console.log(response);
+      await dispatch(
+        addItemToCartDb({
+          items,
+          totalPrice,
+          allergies,
+          deliveryAddress,
+          deliveryDetails,
+        })
+      ).unwrap();
+
+      setMessage("Commande enregistrée", "success");
       // Ajouter ici des actions après succès de la commande (ex. redirection, message de succès)
-    } catch (error) {
-      console.error("Erreur lors de la commande:", error);
+    } catch (error: unknown) {
+      setMessage((error as ErrorType).message, "error");
       // Ajouter ici un message d'erreur pour l'utilisateur
     }
   };
 
   return (
     <>
+    <MessageDisplay/>
       <div className="order-summary">
         <div className="order-summary__details">
-          <h1 className="order-summary__title">Récapitulatif de la commande</h1>
+          <h1 className="order-summary__title">
+            <span onClick={() => navigate(-1)} style={{ cursor: "pointer" }}>
+              <FaArrowLeft />
+            </span>
+            Récapitulatif de la commande
+          </h1>
           <p className="order-summary__products">{items.length} Commandes</p>
 
           <div className="order-summary__product-list">
@@ -64,9 +89,22 @@ function Checkout() {
           <div className="order-summary__options">
             <div
               className="order-summary__option"
+              style={{ position: "relative" }}
               onClick={() => setIsModalOpen(true)}
             >
               <h3 className="order-summary__option-title">Des allergies ?</h3>
+              {allergies && (
+                <p
+                  className="order-summary__allergies"
+                  style={{
+                    position: "absolute",
+                    top: "50px",
+                    fontSize: "12px",
+                  }}
+                >
+                  {allergies}
+                </p>
+              )}
               <div className="order-summary__option-btn">
                 <span>
                   <IoIosArrowForward />
