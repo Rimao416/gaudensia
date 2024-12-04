@@ -33,7 +33,7 @@ const getRandomDishes = (dishes: dishes[], count = 6) => {
 
 function Home() {
   const { t } = useTranslation();
-  const  whyChooseUs  = useWhyChooseUs();
+  const whyChooseUs = useWhyChooseUs();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Null = Tous
   const { categories } = useAppSelector((state) => state.categories);
   const dispatch = useAppDispatch();
@@ -141,16 +141,10 @@ function Home() {
       </section>
       <section className="ads">
         <div className="ads__wrapper">
-          <h1>Bienvenue dans l'univers culinaire de Gaudensia</h1>
-          <p>
-            Dans sa cuisine, elle ne se contente pas de préparer des repas ;
-            elle crée des histoires, des souvenirs et un sentiment
-            d'appartenance. Chaque recette est une invitation à explorer des
-            saveurs inoubliables et à partager des moments précieux autour de la
-            table.
-          </p>
+          <h1>{t("aboutTitle")}</h1>
+          <p>{t("aboutDescription")}</p>
           <Button type="outline" onClick={() => console.log("Salut")}>
-            <Link to="/a-propos">En Savoir Plus</Link>
+            <Link to="/a-propos">{t("aboutButton")}</Link>
           </Button>
         </div>
         <div className="ads__wrapper">
@@ -172,7 +166,7 @@ function Home() {
       </section>
       <section className="menu">
         <div className="menu__header">
-          <h1>Notre Menu</h1>
+          <h1>{t("menuTitle")}</h1>
           <Swiper
             slidesPerView={5}
             spaceBetween={10}
@@ -199,7 +193,7 @@ function Home() {
                     }`}
                     onClick={() => setSelectedCategory(null)}
                   >
-                    Tous
+                    {t("menuAll")}
                   </div>
                 </SwiperSlide>
 
@@ -227,12 +221,12 @@ function Home() {
         </div>
         <div style={{ textAlign: "center", marginTop: "20px" }}>
           <Link to="/menu" className="link link__outline">
-            Voir tous nos plats
+            {t("menuButton")}
           </Link>
         </div>
       </section>
       <section className="testimonials">
-        <h1 className="testimonials__title">Ce que nos clients disent</h1>
+        <h1 className="testimonials__title">{t("testimonialTitle")}</h1>
         <Swiper
           modules={[Autoplay]}
           slidesPerView={4}

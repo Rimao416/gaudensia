@@ -16,5 +16,12 @@
           "description": "Des produits frais et équilibrés, à votre table."
         }
       },
-      "shouldLike":"Vous aimeriez peut-être"
+      "shouldLike":"Vous aimeriez peut-être",
+      "aboutTitle":"Bienvenue dans l'univers culinaire de Gaudensia",
+       "aboutDescription": "Dans sa cuisine, elle ne se contente pas de préparer des repas ;\nelle crée des histoires, des souvenirs et un sentiment\nd'appartenance. Chaque recette est une invitation à explorer des\nsaveurs inoubliables et à partager des moments précieux autour de la\ntable.",
+      "aboutButton":"En Savoir Plus",
+      "menuTitle":"Notre Menu",
+      "menuAll":"Tous",
+      "menuButton":"Voir tous nos plats",
+      "testimonialTitle":"Ce que nos clients disent"
   }

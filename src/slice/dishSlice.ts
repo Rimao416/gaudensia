@@ -32,7 +32,7 @@ export const getDishes = createAsyncThunk<dishes[]>(
   async (_, thunkAPI) => {
     try {
       const response = await API.get("/dishes");
-      return response.data;
+      return response.data.dishes;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -114,6 +114,7 @@ const dishSlice = createSlice({
         state.error = null;
       })
       .addCase(getDishes.fulfilled, (state, action) => {
+        console.log(action)
         state.loading = false;
         state.dishes = action.payload;
       })
