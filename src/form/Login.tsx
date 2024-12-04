@@ -1,91 +1,70 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoClose } from "react-icons/io5";
-
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { login, setErrors } from "../slice/authSlice";
-import { useMessages } from "../context/useMessage";
-import { useAuthOverlay } from "../context/useAuthOverlay";
 import Joi from "joi";
+import { useLoginMutation } from "../slice/authSlice";
 
-const validationSchema = Joi.object({
-  email: Joi.string()
-    .email({ tlds: { allow: false } })
-    .required()
-    .messages({
-      "string.email": "Email invalide",
-      "string.empty": "L'email est requis",
-    }),
-  password: Joi.string().min(6).required().messages({
-    "string.empty": "Le mot de passe est requis",
-    "string.min": "Le mot de passe doit comporter au moins 6 caractères",
-  }),
-});
 function Login() {
-  const dispatch = useAppDispatch();
-  const { setAuthOverlayVisible } = useAuthOverlay();
-  const { setMessage } = useMessages();
-  const { setType, type } = useAuthOverlay();
+  const validationSchema = Joi.object({
+    email: Joi.string()
+      .email({ tlds: { allow: false } })
+      .required()
+      .messages({
+        "string.email": "Email invalide",
+        "string.empty": "L'email est requis",
+      }),
+    password: Joi.string().min(6).required().messages({
+      "string.empty": "Le mot de passe est requis",
+      "string.min": "Le mot de passe doit comporter au moins 6 caractères",
+    }),
+  });
+  const [login, { isLoading }] = useLoginMutation(); // Utilisation du hook `useLoginMutation`
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
-  const [showErrors, setShowErrors] = useState<{ [key: string]: boolean }>({});
-  const { errors } = useAppSelector((state) => state.auth);
-  useEffect(() => {
-    const timers = Object.keys(showErrors).map((key) =>
-      setTimeout(() => {
-        setShowErrors((prev) => ({ ...prev, [key]: false }));
-      }, 5000)
-    );
 
-    return () => timers.forEach(clearTimeout);
-  }, [showErrors]);
+  const [validationErrors, setValidationErrors] = useState<{
+    [key: string]: string | null;
+  }>({});
+
   const handleValidation = () => {
-    const { email, password } = credentials; // Récupérer les valeurs de l'état credentials
-    const { error } = validationSchema.validate(
-      { email, password }, // Utiliser les variables de l'état
-      { abortEarly: false }
-    );
+    const { error } = validationSchema.validate(credentials, {
+      abortEarly: false,
+    });
     if (error) {
-      const newErrors: { [key: string]: string | null } = {};
+      const newErrors: { [key: string]: string } = {};
       error.details.forEach((detail) => {
         newErrors[detail.path[0]] = detail.message;
       });
-      dispatch(setErrors(newErrors));
-      return false; // Validation échouée
-    } 
-    return true; // Validation réussie
+      setValidationErrors(newErrors);
+      return false;
+    }
+    setValidationErrors({});
+    return true;
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const field = e.target.name; // Déclarer 'field' à partir de e.target.name
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
 
-    setCredentials({ ...credentials, [field]: e.target.value });
-
-    // Vérifier et supprimer l'erreur associée au champ
-    if (errors && errors[field]) {
-      setErrors({
-        ...errors,
-        [field]: null, // Effacer l'erreur pour ce champ
-      });
-
-      // Afficher les erreurs après validation
-      setShowErrors({
-        ...showErrors,
-        [field]: true, // Afficher l'erreur pour ce champ spécifique
-      });
+    // Supprimer l'erreur pour ce champ s'il y en a une
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (handleValidation()) {
+    if (!handleValidation()) return;
 
-      const response = await dispatch(login(credentials));
-      if (login.fulfilled.match(response)) {
-        setMessage("Utilisateur connecté avec succès", "success");
-        setAuthOverlayVisible(false);
-      }
+    try {
+      const response = await login(credentials).unwrap(); // Effectuer la mutation avec `unwrap`
+      // Connexion réussie
+      console.log("Connexion réussie", response);
+    } catch (err) {
+      // Échec de la connexion (par exemple, mauvaise combinaison email/mot de passe)
+      console.error("Erreur de connexion", err);
     }
   };
 
@@ -93,30 +72,25 @@ function Login() {
     <>
       <div
         className="overlay__close"
-        onClick={() => setAuthOverlayVisible(false)}
+        onClick={() => console.log("Fermer l'overlay")}
       >
-        <span>
-          <IoClose />
-        </span>
+        <IoClose />
       </div>
-      <h1 className="overlay__title" onClick={() => setType("sign")}>
-        Connexion
-      </h1>
-      <p className="overlay__text">Commnencez à vous connecter</p>
+      <h1 className="overlay__title">Connexion</h1>
       <form className="overlay__form" onSubmit={handleSubmit}>
         <div>
           <input
-            type="mail"
+            type="email"
             placeholder="E-mail"
             className={`overlay__input ${
-              errors && errors.email ? "input-error" : ""
+              validationErrors.email ? "input-error" : ""
             }`}
-            defaultValue={credentials.email}
             name="email"
+            value={credentials.email}
             onChange={handleChange}
           />
-          {errors && errors.email && (
-            <p className="error-text">{errors && errors.email}</p>
+          {validationErrors.email && (
+            <p className="error-text">{validationErrors.email}</p>
           )}
         </div>
         <div>
@@ -124,38 +98,25 @@ function Login() {
             type="password"
             placeholder="Mot de passe"
             className={`overlay__input ${
-              errors && errors.password ? "input-error" : ""
+              validationErrors.password ? "input-error" : ""
             }`}
             name="password"
-            defaultValue={credentials.password}
+            value={credentials.password}
             onChange={handleChange}
           />
-          {errors && errors.password && (
-            <p className="error-text">{errors && errors.password}</p>
+          {validationErrors.password && (
+            <p className="error-text">{validationErrors.password}</p>
           )}
         </div>
-        <p className="overlay__info">
-          Créer un compte vous permet de commander plus rapidement,
-          d'enregistrer plusieurs adresses, de suivre vos commandes et bien plus
-          encore ; connectez-vous dès maintenant pour accéder à ces avantages.
-        </p>
-        <button type="submit" className="button button__outline">
-          Se connecter
+        <button
+          type="submit"
+          className="button button__outline"
+          disabled={isLoading}
+        >
+          {isLoading ? "Connexion..." : "Se connecter"}
         </button>
-        <p className="overlay__text">
-          Vous n'avez pas de compte ?{" "}
-          <span
-            style={{ color: "#FF6060", cursor: "pointer" }}
-            onClick={(e) => {
-              e.preventDefault(); // Prévenir le comportement par défaut du lien
-              setType("sign");
-              console.log(type);
-            }}
-          >
-            S'enregistrer
-          </span>
-        </p>
       </form>
+      {/* {isError && <p className="error-text">{error?.message || "Erreur lors de la connexion"}</p>} */}
     </>
   );
 }

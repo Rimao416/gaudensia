@@ -1,23 +1,29 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import categorySlice from "../slice/categorySlice";
-import dishSlice from "../slice/dishSlice";
-import testimonialSlice from "../slice/testimonialSlice";
-import authSlice from "../slice/authSlice";
+import  { categoryApi } from "../slice/categorySlice";
+import  { dishesApi } from "../slice/dishSlice";
+import { authApi } from "../slice/authSlice";
 import cartSlice from "../slice/cartSlice";
 import saveCartToLocalStorage from "./listener";
+import { testimonialApi } from "../slice/testimonialSlice";
 export const store = configureStore({
   reducer: {
-    categories: categorySlice,
-    dishes: dishSlice,
-    testimonials: testimonialSlice,
-    auth: authSlice,
+    [categoryApi.reducerPath]: categoryApi.reducer,
+    [dishesApi.reducerPath]:dishesApi.reducer,
+    [authApi.reducerPath]:authApi.reducer,
+    [testimonialApi.reducerPath]: testimonialApi.reducer,
     cart: cartSlice,
   },
+
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(saveCartToLocalStorage),
+    })
+    .concat(authApi.middleware)
+    .concat(dishesApi.middleware) // Ajoute le middleware RTK Query ici
+    .concat(categoryApi.middleware)
+    .concat(testimonialApi.middleware)
+    .concat(saveCartToLocalStorage),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

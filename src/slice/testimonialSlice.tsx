@@ -1,49 +1,21 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API } from "../config";
 import { testimonial } from "../interface/testimonial";
-interface TestimonialState {
-  testimonials: testimonial[] | null;
-  loading: boolean;
-  error: string | null;
-}
 
-const initialState: TestimonialState = {
-  testimonials: [],
-  loading: false,
-  error: null,
-};
-
-export const getTestimonials = createAsyncThunk<testimonial[]>(
-  "category/getTestimonials",
-  async (_, thunkAPI) => {
-    try {
-      const response = await API.get("/testimonials")
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-
-const testimonialSlice = createSlice({
-  name: "testimonial",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getTestimonials.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getTestimonials.fulfilled, (state, action) => {
-        state.loading = false;
-        state.testimonials = action.payload;
-      })
-      .addCase(getTestimonials.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Something went wrong";
-      });
-  },
+// Création de l'API avec RTK Query pour les témoignages
+export const testimonialApi = createApi({
+  reducerPath: "testimonialApi",
+  baseQuery: fetchBaseQuery({ baseUrl: API.defaults.baseURL }),
+  endpoints: (builder) => ({
+    getTestimonials: builder.query<testimonial[], void>({
+      query: () => "/testimonials",
+    }),
+  }),
 });
 
-export default testimonialSlice.reducer;
+export const {
+  useGetTestimonialsQuery, // Hook généré pour obtenir les témoignages
+} = testimonialApi;
+
+// Intégration dans le store (à ajouter dans le slice de store)
+export default testimonialApi.reducer;

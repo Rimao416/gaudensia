@@ -2,13 +2,11 @@ import Navbar from "../components/Navbar";
 import aniomationData from "../assets/animation.json";
 import Testimonials from "../assets/testimonial.png";
 import Lottie from "lottie-react";
-import { useAppDispatch, useAppSelector } from "../store/store";
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { getDishes } from "../slice/dishSlice";
-import { getCategories } from "../slice/categorySlice";
-// import Gaudensia from "../assets/gaudensia.png";
-import Gaudensia from "../assets/header_1.jpg";
+import {  useRef, useState } from "react";
+import { useGetCategoriesQuery } from "../slice/categorySlice";
+import Gaudensia from "../assets/gaudensia.png";
+// import Gaudensia from "../assets/header_1.jpg";
 import { dishes } from "../interface/dishes";
 // import { truncateTitle } from "../utils";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -19,12 +17,14 @@ import "swiper/css/pagination";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
-import { getTestimonials } from "../slice/testimonialSlice";
+// import { getTestimonials } from "../slice/testimonialSlice";
 import Footer from "../components/Footer";
 import { useTranslation } from "react-i18next";
 import useWhyChooseUs from "../components/useWhyChooseUs";
+import { useGetDishesQuery } from "../slice/dishSlice";
+import { useGetTestimonialsQuery } from "../slice/testimonialSlice";
 
-const getRandomDishes = (dishes: dishes[], count = 6) => {
+const getRandomDishes = (dishes: dishes[] , count = 6) => {
   // Crée une copie du tableau de plats pour ne pas muter l'original
   const shuffled = [...dishes].sort(() => 0.5 - Math.random());
   // Sélectionne les 'count' premiers éléments après le mélange
@@ -35,24 +35,20 @@ function Home() {
   const { t } = useTranslation();
   const whyChooseUs = useWhyChooseUs();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Null = Tous
-  const { categories } = useAppSelector((state) => state.categories);
-  const dispatch = useAppDispatch();
   const swiperRef = useRef<SwiperCore | null>(null); // Définir le type de swiperRef
-
-  useEffect(() => {
-    dispatch(getCategories());
-    dispatch(getDishes());
-    dispatch(getTestimonials());
-  }, [dispatch]);
-  const { dishes } = useAppSelector((state) => state.dishes);
-  const { testimonials } = useAppSelector((state) => state.testimonials);
-
-  const randomDishes = getRandomDishes(dishes);
+  const { data: dishes } = useGetDishesQuery();
+  console.log(dishes);
+  const { data: categories } = useGetCategoriesQuery();
+  const {data:testimonials} = useGetTestimonialsQuery();
+  // Vérifier si `dishes` est défini et est un tableau avant de l'utiliser
+  const randomDishes = Array.isArray(dishes) ? getRandomDishes(dishes) : [];
+  
   const filteredDishes = Array.isArray(dishes)
     ? selectedCategory
       ? dishes.filter((dish) => dish.category._id === selectedCategory)
       : dishes
     : [];
+  
   const limitedDishes = filteredDishes.slice(0, 6); // Limiter à 6 plats maximum
   console.log(randomDishes);
 
@@ -92,7 +88,7 @@ function Home() {
           </svg>
         </div>
       </div>
-      <section className="why">
+       <section className="why">
         {whyChooseUs.map((item) => (
           <div className="why__item" key={item.title}>
             <img src={item.image} alt={item.title} />
@@ -103,6 +99,7 @@ function Home() {
           </div>
         ))}
       </section>
+      
       <section className="daily">
         <h1>{t("shouldLike")}</h1>
 
@@ -139,6 +136,7 @@ function Home() {
           ))}
         </Swiper>
       </section>
+      
       <section className="ads">
         <div className="ads__wrapper">
           <h1>{t("aboutTitle")}</h1>
@@ -164,6 +162,7 @@ function Home() {
           </svg>
         </div>
       </section>
+      
       <section className="menu">
         <div className="menu__header">
           <h1>{t("menuTitle")}</h1>
@@ -225,6 +224,7 @@ function Home() {
           </Link>
         </div>
       </section>
+      
       <section className="testimonials">
         <h1 className="testimonials__title">{t("testimonialTitle")}</h1>
         <Swiper

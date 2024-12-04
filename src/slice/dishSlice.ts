@@ -1,7 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API } from "../config";
 import { dishes } from "../interface/dishes";
 
+// Interface pour les catégories avec leurs plats
 interface CategoryWithDishes {
   category: {
     _id: string;
@@ -9,167 +10,43 @@ interface CategoryWithDishes {
   };
   dishes: dishes[];
 }
-interface DishState {
-  dishes: dishes[];
-  searchResults: dishes[];
 
-  singleDish: dishes | null; // Un attribut pour stocker un plat unique
-  categoriesWithDishes: CategoryWithDishes[];
-  loading: boolean;
-  error: string | null;
-}
-const initialState: DishState = {
-  dishes: [],
-  searchResults: [],
-  categoriesWithDishes: [],
-  loading: false,
-  error: null,
-  singleDish: null,
-};
+export const dishesApi = createApi({
+  reducerPath: "dishesApi",
+  baseQuery: fetchBaseQuery({ baseUrl: API.defaults.baseURL }),
+  endpoints: (builder) => ({
+    // Récupère tous les plats avec transformResponse pour renvoyer directement le tableau 'dishes'
+    getDishes: builder.query<dishes[], void>({
+      query: () => "/dishes",
+      transformResponse: (response: { dishes: dishes[] }) => response.dishes, // Récupère directement le tableau 'dishes'
+    }),
 
-export const getDishes = createAsyncThunk<dishes[]>(
-  "dish/getDishes",
-  async (_, thunkAPI) => {
-    try {
-      const response = await API.get("/dishes");
-      return response.data.dishes;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
+    // Récupère un plat spécifique par son ID (sans transformation de réponse)
+    fetchSingleDish: builder.query<dishes, string>({
+      query: (id) => `/dishes/${id}`,
+    }),
 
-export const fetchMenuByCategories = createAsyncThunk(
-  "dishes/fetchMenuByCategories",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await API.get("/dishes/getMenuCategories");
-      return response.data; // Assure-toi que la réponse soit dans le format attendu
-    } catch (error: unknown) {
-      console.log(error);
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-      return rejectWithValue("Erreur inconnue");
-    }
-  }
-);
+    // Recherche de plats par terme de recherche (sans transformation de réponse)
+    searchDish: builder.query<dishes[], string>({
+      query: (searchTerm) => `/dishes?search=${searchTerm}`,
+    }),
 
-export const fetchMenuByCategory = createAsyncThunk(
-  "dishes/fetchMenuByCategory",
-  async (id, { rejectWithValue }) => {
-    try {
-      console.log("Tu viens d'envoyer " + id);
-      const response = await API.get(`/dishes/getByCategories/${id}`);
-      return response.data; // Assure-toi que la réponse soit dans le format attendu
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-      return rejectWithValue("Erreur inconnue");
-    }
-  }
-);
+    // Récupère les menus par catégories (sans transformation de réponse)
+    fetchMenuByCategories: builder.query<CategoryWithDishes[], void>({
+      query: () => "/dishes/getMenuCategories",
+    }),
 
-export const fetchSingleDish = createAsyncThunk(
-  "dishes/fetchSingleDish",
-  async (id: string, { rejectWithValue }) => {
-    try {
-      const response = await API.get("/dishes/" + id);
-
-      const data: dishes = await response.data;
-      return data;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-      return rejectWithValue("Erreur inconnue");
-    }
-  }
-);
-
-export const searchDish = createAsyncThunk(
-  "dishes/searchDish",
-  async (searchTerm: string, { rejectWithValue }) => {
-    try {
-      const response = await API.get("/dishes?search=" + searchTerm);
-      return response.data;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-      return rejectWithValue("Erreur inconnue");
-    }
-  }
-);
-
-const dishSlice = createSlice({
-  name: "dish",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getDishes.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getDishes.fulfilled, (state, action) => {
-        console.log(action)
-        state.loading = false;
-        state.dishes = action.payload;
-      })
-      .addCase(getDishes.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Something went wrong!";
-      })
-      .addCase(searchDish.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(searchDish.fulfilled, (state, action) => {
-        state.loading = false;
-        state.searchResults = action.payload;
-      })
-      .addCase(searchDish.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Something went wrong!";
-      })
-      .addCase(fetchMenuByCategories.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchMenuByCategories.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categoriesWithDishes = action.payload; // Mise à jour des catégories avec les plats
-      })
-      .addCase(fetchMenuByCategories.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(fetchMenuByCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchMenuByCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categoriesWithDishes = action.payload; // Mise à jour des catégories avec les plats
-      })
-      .addCase(fetchMenuByCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(fetchSingleDish.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchSingleDish.fulfilled, (state, action) => {
-        state.loading = false;
-        state.singleDish = action.payload;
-      })
-      .addCase(fetchSingleDish.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
-  },
+    // Récupère les plats par une catégorie spécifique (sans transformation de réponse)
+    fetchMenuByCategory: builder.query<CategoryWithDishes[], string>({
+      query: (id) => `/dishes/getByCategories/${id}`,
+    }),
+  }),
 });
-export default dishSlice.reducer;
+
+export const {
+  useGetDishesQuery,
+  useFetchSingleDishQuery,
+  useSearchDishQuery,
+  useFetchMenuByCategoriesQuery,
+  useFetchMenuByCategoryQuery,
+} = dishesApi;

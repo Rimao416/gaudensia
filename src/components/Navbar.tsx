@@ -9,11 +9,11 @@ import CartUser from "./CartUser";
 import { useAuthOverlay } from "../context/useAuthOverlay";
 import Auth from "./Auth";
 import MessageDisplay from "./MessageDisplay";
-import { useAppSelector } from "../store/store";
 import BottomSheet from "./BottomSheet";
 import { TfiWorld } from "react-icons/tfi";
 import { IoIosArrowDown } from "react-icons/io";
 import UserInfo from "./UserInfo";
+import { useGetUserQuery } from "../slice/authSlice";
 
 function Navbar() {
   const location = useLocation();
@@ -22,9 +22,8 @@ function Navbar() {
   const [isSheetOpen, setSheetOpen] = useState(false);
   const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();
   const [isOpen, setIsOpen] = useState(false);
-  const user = useAppSelector((state) => state.auth.user);
   const [isScrolled, setIsScrolled] = useState(false);
-
+  const { data: user } = useGetUserQuery();
   const authModalOpen = () => {
     setOverlayVisible(false);
     setAuthOverlayVisible(true);
