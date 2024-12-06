@@ -14,6 +14,7 @@ import { TfiWorld } from "react-icons/tfi";
 import { IoIosArrowDown } from "react-icons/io";
 import UserInfo from "./UserInfo";
 import { useGetUserQuery } from "../slice/authSlice";
+import { useLanguage } from "../context/useLanguage";
 
 function Navbar() {
   const location = useLocation();
@@ -24,6 +25,8 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { data: user } = useGetUserQuery();
+  const {language}=useLanguage();
+  console.log(language)
   const authModalOpen = () => {
     setOverlayVisible(false);
     setAuthOverlayVisible(true);
@@ -115,7 +118,7 @@ function Navbar() {
               <span className="navigation__icons--world">
                 <TfiWorld />
               </span>
-              <p>FR</p>
+              <p>{language.toUpperCase()}</p>
               <span className="navigation__icons--arrow">
                 <IoIosArrowDown />
               </span>

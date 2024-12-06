@@ -10,16 +10,20 @@ import { AuthOverlayProvider } from "./context/AuthOverlayContext.tsx";
 import "react-phone-number-input/style.css";
 import { MessageProvider } from "./context/NotificationContext.tsx";
 import "./i18n.ts"
+import { LanguageProvider } from "./context/LanguageContext.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
         <AuthOverlayProvider>
+          <LanguageProvider>
+
           <OverlayProvider>
             <MessageProvider>
               <App />
             </MessageProvider>
           </OverlayProvider>
+          </LanguageProvider>
         </AuthOverlayProvider>
       </Provider>
     </BrowserRouter>

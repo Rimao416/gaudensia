@@ -6,6 +6,7 @@ import { useState } from "react";
 interface OrderModalProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
+  
 }
 
 function AllergiaModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {

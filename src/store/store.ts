@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import  { categoryApi } from "../slice/categorySlice";
 import  { dishesApi } from "../slice/dishSlice";
 import { authApi } from "../slice/authSlice";
+import authReducer from "../slice/authSlice"
 import cartSlice from "../slice/cartSlice";
 import saveCartToLocalStorage from "./listener";
 import { testimonialApi } from "../slice/testimonialSlice";
@@ -11,6 +12,7 @@ export const store = configureStore({
     [categoryApi.reducerPath]: categoryApi.reducer,
     [dishesApi.reducerPath]:dishesApi.reducer,
     [authApi.reducerPath]:authApi.reducer,
+    auth: authReducer,
     [testimonialApi.reducerPath]: testimonialApi.reducer,
     cart: cartSlice,
   },

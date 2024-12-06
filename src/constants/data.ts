@@ -1,3 +1,4 @@
+export const language = ["fr", "en", "pl"];
 
 // Définition d'un type pour un plat unique
 interface Dish {
@@ -553,4 +554,3 @@ export const myMenu: Menu = {
     // Ajoute d'autres catégories ici...
   ],
 };
-

@@ -1,16 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { user } from "../interface/user";
 import { API } from "../config";
 
-// Configuration de base pour l'API
+// Définition de l'API RTK Query
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: API.defaults.baseURL,
-    credentials: "include",
+    baseUrl: API.defaults.baseURL, // L'URL de base
+    credentials: "include", // Inclure les cookies
     prepareHeaders: (headers) => {
-      const token = Cookies.get("accessToken");
+      const token = Cookies.get("token");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -35,7 +36,7 @@ export const authApi = createApi({
     getUser: builder.query<user, void>({
       query: () => "/user",
     }),
-    refreshToken: builder.mutation<{ accessToken: string }, void>({
+    refreshToken: builder.mutation<user, void>({
       query: () => ({
         url: "/auth/refresh",
         method: "POST",
@@ -44,9 +45,58 @@ export const authApi = createApi({
   }),
 });
 
+// Export des hooks générés automatiquement
 export const {
   useSignUpMutation,
   useLoginMutation,
   useGetUserQuery,
   useRefreshTokenMutation,
 } = authApi;
+
+// Slice pour gérer les états locaux comme les erreurs
+const authSlice = createSlice({
+  name: "auth",
+  initialState: {
+    user: null as user | null,
+    loading: false,
+    errors: {} as { [key: string]: string | null },
+  },
+  reducers: {
+    setCredentials: (state, action: PayloadAction<Partial<user>>) => {
+      state.user = { ...state.user, ...action.payload } as user;
+    },
+    setErrors: (state, action: PayloadAction<{ [key: string]: string | null }>) => {
+      state.errors = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(authApi.endpoints.signUp.matchFulfilled, (state, { payload }) => {
+        state.user = payload;
+        Cookies.set("token", payload.token);
+      })
+      .addMatcher(authApi.endpoints.login.matchFulfilled, (state, { payload }) => {
+        state.user = payload;
+        Cookies.set("token", payload.token);
+      })
+      .addMatcher(authApi.endpoints.login.matchRejected, (state, { payload }) => {
+        if (payload) {
+          console.log(payload.data)
+          state.errors = payload.data as { [key: string]: string | null };
+        }
+      })
+      .addMatcher(authApi.endpoints.getUser.matchFulfilled, (state, { payload }) => {
+        state.user = payload;
+      })
+      .addMatcher(authApi.endpoints.refreshToken.matchFulfilled, (state, { payload }) => {
+        state.user = payload;
+        Cookies.set("token", payload.token);
+      });
+  },
+});
+
+// Export des actions du slice
+export const { setCredentials, setErrors } = authSlice.actions;
+
+// Export du reducer pour la configuration du store
+export default authSlice.reducer;

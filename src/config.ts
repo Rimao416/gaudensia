@@ -4,6 +4,12 @@ import axios from "axios"
 // import { setCredentials } from "./slice/authSlice";
 export const assetsURL="http://localhost:5000/api/v1"
 export const API = axios.create({ baseURL: "http://localhost:5000/api/v1" });
+API.interceptors.request.use((config) => {
+    const language = localStorage.getItem("lang") || "fr"; // Langue par défaut : "en"
+    config.headers["lang"] = language;
+    return config;
+  });
+  
 // API.interceptors.response.use(
 //     (response) => response,
 //     async (error) => {

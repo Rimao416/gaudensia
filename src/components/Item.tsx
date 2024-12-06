@@ -13,6 +13,7 @@ const Item: React.FC<dishes> = ({ name, description, prices, _id }) => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const isInCart = cartItems.some((item) => item.id === _id);
   const itemCount = cartItems.filter((item) => item.id === _id).length;
+
   const handleOpenModal = () => {
     setModalData({ name, description, prices, _id }); // Envoie des données à l'enfant
   };
