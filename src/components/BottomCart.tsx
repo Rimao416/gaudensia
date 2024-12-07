@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useMessages } from "../context/useMessage";
 import { useAuthOverlay } from "../context/useAuthOverlay";
+import { useTranslation } from "react-i18next";
 interface Props {
   isOpen: boolean;
   onClose: (value: boolean) => void; // Accept a boolean value
@@ -20,14 +21,14 @@ interface Props {
 const BottomCart: React.FC<Props> = ({ isOpen, onClose, items }) => {
   const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
   const { setAuthOverlayVisible } = useAuthOverlay();
-
+const { t } = useTranslation();
   const { setMessage } = useMessages();
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const handleSubmit = () => {
     // Check if user is connected
     if (!user) {
-      setMessage("Veuillez vous connecter pour passer une commande", "warning");
+      setMessage(t("loginForOrder"), "warning");
       setAuthOverlayVisible(true);
     } else {
       //   setIsModalOpen(true);
@@ -50,7 +51,7 @@ const BottomCart: React.FC<Props> = ({ isOpen, onClose, items }) => {
                   <li key={item.id} className="table__order--item">
                     <div className="table__order--details">
                       <h4>{item.name}</h4>
-                      <p>Quantité : {item.quantity}</p>
+                      <p>{t("quantity")} : {item.quantity}</p>
                       <p>{item.price} PLN</p>
                     </div>
                   </li>
@@ -86,7 +87,7 @@ const BottomCart: React.FC<Props> = ({ isOpen, onClose, items }) => {
               style={{ width: "70%" }}
               onClick={handleSubmit}
             >
-              Confirmer pour {totalPrice} PLN
+              {t("confirmFor")} {totalPrice} PLN
             </button>
             {items.length > 0 && (
               <p onClick={() => dispatch(clearCart())}
@@ -96,13 +97,13 @@ const BottomCart: React.FC<Props> = ({ isOpen, onClose, items }) => {
                 color: "red",
                 fontSize: "14px"
               }}
-              >Vider le panier</p>
+              >{t("emptyCard")}</p>
             )}
           </div>
         </>
       ) : (
         <>
-          <h3>Vous pouvez commander ici</h3>
+          <h3>{t("commandHere")}</h3>
           <img src={Shopping} alt="shopping" className="table__order--img" />
         </>
       )}

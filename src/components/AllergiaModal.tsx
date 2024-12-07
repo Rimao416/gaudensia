@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useMessages } from "../context/useMessage";
 import { setAllergies as setAll } from "../slice/cartSlice";
 import { useAppDispatch } from "../store/store";
@@ -13,6 +14,7 @@ function AllergiaModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
   const dispatch = useAppDispatch();
   const { setMessage } = useMessages();
   const [allergies, setAllergies] = useState("");
+  const {t}=useTranslation()
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -29,20 +31,20 @@ function AllergiaModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
 
     if (allergies.trim() !== "") {
       // Si le champ n'est pas vide, vous pouvez faire quelque chose avec `allergies`
-    setMessage("Allergies enregistrées", "success");
+    setMessage(t("savedAllergia"), "success");
       setIsModalOpen(false); // Ferme le modal après l'envoi
       await dispatch(setAll(allergies));
     } else {
       setIsModalOpen(false);
       // Affichez un message d'erreur ou ne faites rien si le champ est vide
-      setMessage("Veuillez entrer des allergies", "warning");
+      setMessage(t("warningAllergia"), "warning");
     }
   };
 
   return (
     <Modal isOpen={isModalOpen} onClose={handleClose}>
       <form className="allergia" onSubmit={handleSubmit}>
-        <h2>Des allergies ?</h2>
+        <h2>{t("someAllergia")}</h2>
         <textarea
           name="allergies"
           id=""
@@ -57,7 +59,7 @@ function AllergiaModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
           className="button button__outline"
           style={{ marginTop: "24px", width: "100%" }}
         >
-          Envoyer
+          {t("send")}
         </button>
       </form>
     </Modal>

@@ -3,7 +3,7 @@ import aniomationData from "../assets/animation.json";
 import Testimonials from "../assets/testimonial.png";
 import Lottie from "lottie-react";
 import { AnimatePresence } from "framer-motion";
-import {  useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import { useGetCategoriesQuery } from "../slice/categorySlice";
 import Gaudensia from "../assets/header_1.jpg";
 import { dishes } from "../interface/dishes";
@@ -29,11 +29,11 @@ const getRandomDishes = (dishes: dishes[] , count = 6) => {
 };
 
 function Home() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const whyChooseUs = useWhyChooseUs();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Null = Tous
   const swiperRef = useRef<SwiperCore | null>(null); // Définir le type de swiperRef
-  const { data: dishes } = useGetDishesQuery();
+  const { data: dishes,refetch } = useGetDishesQuery();
   console.log(dishes);
   const { data: categories } = useGetCategoriesQuery();
   const {data:testimonials} = useGetTestimonialsQuery();
@@ -48,6 +48,10 @@ function Home() {
   
   const limitedDishes = filteredDishes.slice(0, 6); // Limiter à 6 plats maximum
   console.log(randomDishes);
+  useEffect(() => {
+    refetch();
+
+  },[i18n.language,refetch]);
 
   return (
     <div className="app">

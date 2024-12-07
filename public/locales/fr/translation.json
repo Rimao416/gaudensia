@@ -1,27 +1,87 @@
 {
-    "homeTitle":"Savourez sans bouger",
-    "homeSubTitle":"Savourez vos plats préférés sans quitter votre domicile. Profitez de repas délicieux livrés directement à votre porte, pour un moment de plaisir sans effort. Commandez maintenant et dégustez le meilleur de la cuisine, confortablement installé chez vous.",
-    "homeButton":"Consulter le menu",
-    "whyChooseUs": {
-        "freeDelivery": {
-          "title": "Livraison gratuite 24/7",
-          "description": "Livraison offerte pour toute commande supérieure à 100€."
-        },
-        "renownedChef": {
-          "title": "Chef de renommée",
-          "description": "Des plats préparés par un chef primé."
-        },
-        "freshFood": {
-          "title": "Des aliments frais et sains",
-          "description": "Des produits frais et équilibrés, à votre table."
-        }
-      },
-      "shouldLike":"Vous aimeriez peut-être",
-      "aboutTitle":"Bienvenue dans l'univers culinaire de Gaudensia",
-       "aboutDescription": "Dans sa cuisine, elle ne se contente pas de préparer des repas ;\nelle crée des histoires, des souvenirs et un sentiment\nd'appartenance. Chaque recette est une invitation à explorer des\nsaveurs inoubliables et à partager des moments précieux autour de la\ntable.",
-      "aboutButton":"En Savoir Plus",
-      "menuTitle":"Notre Menu",
-      "menuAll":"Tous",
-      "menuButton":"Voir tous nos plats",
-      "testimonialTitle":"Ce que nos clients disent"
-  }
+  "homeTitle": "Savourez sans bouger",
+  "homeSubTitle": "Savourez vos plats préférés sans quitter votre domicile. Profitez de repas délicieux livrés directement à votre porte, pour un moment de plaisir sans effort. Commandez maintenant et dégustez le meilleur de la cuisine, confortablement installé chez vous.",
+  "homeButton": "Consulter le menu",
+  "whyChooseUs": {
+    "freeDelivery": {
+      "title": "Livraison gratuite 24/7",
+      "description": "Livraison offerte pour toute commande supérieure à 100€."
+    },
+    "renownedChef": {
+      "title": "Chef de renommée",
+      "description": "Des plats préparés par un chef primé."
+    },
+    "freshFood": {
+      "title": "Des aliments frais et sains",
+      "description": "Des produits frais et équilibrés, à votre table."
+    }
+  },
+  "shouldLike": "Vous aimeriez peut-être",
+  "aboutTitle": "Bienvenue dans l'univers culinaire de Gaudensia",
+  "aboutDescription": "Dans sa cuisine, elle ne se contente pas de préparer des repas ;\nelle crée des histoires, des souvenirs et un sentiment\nd'appartenance. Chaque recette est une invitation à explorer des\nsaveurs inoubliables et à partager des moments précieux autour de la\ntable.",
+  "aboutButton": "En Savoir Plus",
+  "menuTitle": "Notre Menu",
+  "menuAll": "Tous",
+  "menuButton": "Voir tous nos plats",
+  "testimonialTitle": "Ce que nos clients disent",
+  "login": "Connexion",
+  "sign": "Inscription",
+  "cart": "Panier",
+  "account": "Compte",
+  "language": "Langue",
+  "logout": "Deconnexion",
+  "menu": "Menu",
+  "loginMessage": "Commencez à vous connecter",
+  "loginDescription": "Créer un compte vous permet de commander plus rapidement, d'enregistrer plusieurs adresses, de suivre vos commandes et bien plus encore ; connectez-vous dès maintenant pour accéder à ces avantages.",
+  "loginButton": "Se connecter",
+  "signButton": "S'inscrire",
+  "loginAlert": "Vous n'avez pas de compte ?",
+  "loginAlternate": "S'enregistrer",
+  "signMessage": "Bienvenue chez Gaudensia",
+  "signAlert": "Vous avez deja un compte ?",
+  "signAlternate": "Se connecter",
+  "usePosition": "Utiliser ma position actuelle",
+  "locationNotSupported": "La géolocalisation n'est pas supportée par votre navigateur.",
+  "locationError": "Une erreur s'est produite lors de la recherche de votre position.",
+  "validation": {
+    "emailInvalid": "Email invalide",
+    "emailRequired": "L'email est requis",
+    "passwordRequired": "Le mot de passe est requis",
+    "passwordMin": "Le mot de passe doit comporter au moins 6 caractères",
+    "deliveryAddressRequired": "L'adresse de livraison est requise",
+    "deliveryDetailsRequired": "Les détails de livraison sont requis"
+  },
+  "placeholderPassword":"Mot de passe",
+  "placeholderEmail":"Email",
+  "placeholderFullName":"Nom complet",
+  "placeholderPhoneNumber":"Numéro de telephone",
+  "placeholderAddress":"Adresse",
+  "placeholderCity":"Ville",
+  "menuInfo":"À Table !",
+  "menuDescription":"Venez découvrir un menu savoureux, où chaque plat est une invitation à la gourmandise. Explorez nos recettes, choisissez vos favoris et régalez-vous en un clin d'œil !",
+  "commandHere":"Vous pouvez commander ici",
+  "commandInProgressBar":"Voir les commandes en cours",
+  "searchCommand":"Résultat de recherche pour \" ",
+  "uCommand":"Votre commande",
+  "quantity":"Quantité",
+  "confirmFor":"Confirmer pour",
+  "orderDetails":"Détails de la Livraison",
+  "placeholderOrderAddress":"Adresse de livraison",
+  "placeholderOrderDetails":"Détails de livraison ex : Rue de la paix 12",
+  "confirm":"Confirmer",
+  "loginForOder":"Veuillez vous connecter pour passer une commande",
+  "emptyCard":"Vider le panier",
+  "AddInCardFor":"Ajouter pour",
+  "savedAllergia":"Allergies enregistrées",
+  "warningAllergia":"Veuillez entrer des allergies",
+  "someAllergia":"Des allergies ?",
+  "send":"Envoyer",
+  "userDropdown":{
+    "logout":"Déconnexion",
+    "account":"Compte",
+    "cart":"Panier",
+    "order":"Commande"
+  },
+  "loginSuccess":"Connexion reussie",
+  "loginError":"Connexion echouee"
+}

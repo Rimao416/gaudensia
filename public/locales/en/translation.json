@@ -1,4 +1,88 @@
 {
-    "welcome": "Welcome to our application!",
-    "language": "English"
-  }
+  "homeTitle": "Savor Without Moving",
+  "homeSubTitle": "Enjoy your favorite dishes without leaving your home. Relish delicious meals delivered straight to your doorstep for effortless indulgence. Order now and savor the best of cuisine, comfortably from your own home.",
+  "homeButton": "Browse the Menu",
+  "whyChooseUs": {
+    "freeDelivery": {
+      "title": "Free Delivery 24/7",
+      "description": "Free delivery for all orders over €100."
+    },
+    "renownedChef": {
+      "title": "Renowned Chef",
+      "description": "Dishes crafted by an award-winning chef."
+    },
+    "freshFood": {
+      "title": "Fresh and Healthy Ingredients",
+      "description": "Fresh, balanced ingredients brought to your table."
+    }
+  },
+  "shouldLike": "You May Also Like",
+  "aboutTitle": "Welcome to Gaudensia's Culinary World",
+  "aboutDescription": "In her kitchen, she doesn’t just prepare meals;\nshe creates stories, memories, and a sense of\nbelonging. Every recipe is an invitation to explore\nunforgettable flavors and share precious moments\naround the table.",
+  "aboutButton": "Learn More",
+  "menuTitle": "Our Menu",
+  "menuAll": "All",
+  "menuButton": "View All Dishes",
+  "testimonialTitle": "What Our Customers Say",
+  "login": "Login",
+  "sign": "Sign Up",
+  "cart": "Cart",
+  "account": "Account",
+  "language": "Language",
+  "logout": "Logout",
+  "menu": "Menu",
+  "loginMessage": "Start by Logging In",
+  "loginDescription": "Creating an account allows you to order faster, save multiple addresses, track your orders, and more. Log in now to access these benefits.",
+  "loginButton": "Log In",
+  "signButton": "Sign Up",
+  "loginAlert": "Don't have an account?",
+  "loginAlternate": "Register",
+  "signMessage": "Welcome to Gaudensia",
+  "signAlert": "Already have an account?",
+  "signAlternate": "Log In",
+  "usePosition": "Use My Current Location",
+  "locationNotSupported": "Geolocation is not supported by your browser.",
+  "locationError": "An error occurred while retrieving your location.",
+  "validation": {
+    "emailInvalid": "Invalid email",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least 6 characters long",
+        "deliveryAddressRequired": "L'adresse de livraison est requise",
+    "deliveryDetailsRequired": "Les détails de livraison sont requis"
+  },
+  "placeholderPassword": "Password",
+  "placeholderEmail": "Email",
+  "placeholderFullName": "Full Name",
+  "placeholderPhoneNumber": "Phone Number",
+  "placeholderAddress": "Address",
+  "placeholderCity": "City",
+  "menuInfo": "Dinner is Served",
+  "menuDescription": "Come and explore a delicious menu where every dish is an invitation to indulgence. Discover our recipes, pick your favorites, and enjoy in no time!",
+  "commandHere": "You can order here",
+  "commandInProgressBar": "See orders in progress",
+  "searchCommand": "Search results for \" ",
+  "uCommand": "Your order",
+  "quantity": "Quantity",
+  "confirmFor": "Confirm for",
+  "orderDetails": "Delivery Details",
+  "placeholderOrderAddress": "Delivery Address",
+  "placeholderOrderDetails": "Delivery details ex : Rue de la paix 12",
+  "confirm": "Confirm",
+  "loginForOder": "Please log in to place an order",
+  "emptyCard": "Empty Cart",
+  "AddInCardFor": "Add for",
+  "savedAllergia": "Saved Allergies",
+  "warningAllergia": "Please enter allergies",
+  "someAllergia": "Any allergies?",
+  "send": "Send",
+  "userDropdown":{
+    "logout":"Logout",
+    "account":"Account",
+    "cart":"Cart",
+    "order":"Order"
+  },
+  "loginSuccess":"Login Success",
+  "loginError":"Login Error"
+
+}

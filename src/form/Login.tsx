@@ -6,23 +6,31 @@ import { useMessages } from "../context/useMessage";
 import { useAuthOverlay } from "../context/useAuthOverlay";
 import Joi from "joi";
 import { setErrors, useLoginMutation } from "../slice/authSlice";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
-const validationSchema = Joi.object({
-  email: Joi.string()
-    .email({ tlds: { allow: false } })
-    .required()
-    .messages({
-      "string.email": "Email invalide",
-      "string.empty": "L'email est requis",
-    }),
-  password: Joi.string().min(6).required().messages({
-    "string.empty": "Le mot de passe est requis",
-    "string.min": "Le mot de passe doit comporter au moins 6 caractères",
-  }),
-});
+const getValidationSchema = () => {
+  return Joi.object({
+    email: Joi.string()
+      .email({ tlds: { allow: false } })
+      .required()
+      .messages({
+        "string.email": i18n.t("validation.emailInvalid"),
+        "string.empty": i18n.t("validation.emailRequired"),
+      }),
+    password: Joi.string()
+      .min(6)
+      .required()
+      .messages({
+        "string.empty": i18n.t("validation.passwordRequired"),
+        "string.min": i18n.t("validation.passwordMin"),
+      }),
+  });
+};
 function Login() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const [login]=useLoginMutation();
+  const [login] = useLoginMutation();
   const { setAuthOverlayVisible } = useAuthOverlay();
   const { setMessage } = useMessages();
   const { setType, type } = useAuthOverlay();
@@ -32,7 +40,7 @@ function Login() {
   });
   const [showErrors, setShowErrors] = useState<{ [key: string]: boolean }>({});
   const { errors } = useAppSelector((state) => state.auth);
-  console.log(errors)
+  console.log(errors);
   useEffect(() => {
     const timers = Object.keys(showErrors).map((key) =>
       setTimeout(() => {
@@ -44,7 +52,7 @@ function Login() {
   }, [showErrors]);
   const handleValidation = () => {
     const { email, password } = credentials; // Récupérer les valeurs de l'état credentials
-    const { error } = validationSchema.validate(
+    const { error } = getValidationSchema().validate(
       { email, password }, // Utiliser les variables de l'état
       { abortEarly: false }
     );
@@ -83,7 +91,12 @@ function Login() {
 
     if (handleValidation()) {
       const response = await login(credentials).unwrap(); // Utilisation de la mutation signUp
-      console.log(response);   
+      if (response) {
+        setMessage("Connexion reussie", "success");
+      } // if(login.fulfilled.match(response)){
+      //   setMessage("Connexion reussie", "success");
+      //   setAuthOverlayVisible(false);
+      // }
     }
   };
 
@@ -98,14 +111,14 @@ function Login() {
         </span>
       </div>
       <h1 className="overlay__title" onClick={() => setType("sign")}>
-        Connexion
+        {t("Connexion")}
       </h1>
-      <p className="overlay__text">Commnencez à vous connecter</p>
+      <p className="overlay__text">{t("loginMessage")}</p>
       <form className="overlay__form" onSubmit={handleSubmit}>
         <div>
           <input
             type="mail"
-            placeholder="E-mail"
+            placeholder={t("placeholderEmail")}
             className={`overlay__input ${
               errors && errors.email ? "input-error" : ""
             }`}
@@ -120,7 +133,7 @@ function Login() {
         <div>
           <input
             type="password"
-            placeholder="Mot de passe"
+            placeholder={t("placeholderPassword")}
             className={`overlay__input ${
               errors && errors.password ? "input-error" : ""
             }`}
@@ -132,16 +145,12 @@ function Login() {
             <p className="error-text">{errors && errors.password}</p>
           )}
         </div>
-        <p className="overlay__info">
-          Créer un compte vous permet de commander plus rapidement,
-          d'enregistrer plusieurs adresses, de suivre vos commandes et bien plus
-          encore ; connectez-vous dès maintenant pour accéder à ces avantages.
-        </p>
+        <p className="overlay__info">{t("loginDescription")}</p>
         <button type="submit" className="button button__outline">
-          Se connecter
+          {t("loginButton")}
         </button>
         <p className="overlay__text">
-          Vous n'avez pas de compte ?{" "}
+          {t("loginAlert")}{" "}
           <span
             style={{ color: "#FF6060", cursor: "pointer" }}
             onClick={(e) => {
@@ -150,7 +159,7 @@ function Login() {
               console.log(type);
             }}
           >
-            S'enregistrer
+            {t("loginAlternate")}
           </span>
         </p>
       </form>

@@ -14,7 +14,7 @@ i18n
     backend:{
         loadPath:"/locales/{{lng}}/translation.json"
     },
-    fallbackLng: "fr", // Langue par défaut
+    fallbackLng: localStorage.getItem("i18nextLng") ?? "fr", // Langue par défaut
     interpolation: {
       escapeValue: false, // React gère déjà l'échappement des valeurs
     },

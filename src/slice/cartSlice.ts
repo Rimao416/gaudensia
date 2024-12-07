@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { API } from "../config";
+import {API} from "../config";
 import Cookies from "js-cookie";
 import axios from "axios";
 

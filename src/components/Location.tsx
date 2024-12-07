@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LineWaveSpinner from "./LineWaveSpinenr";
+import { useTranslation } from "react-i18next";
 
 interface GetCurrentLocationProps {
   onLocationRetrieved: (address: string) => void; // Callback pour retourner l'adresse
@@ -9,10 +10,11 @@ const GetCurrentLocation: React.FC<GetCurrentLocationProps> = ({
   onLocationRetrieved,
 }) => {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleClick = async () => {
     if (!navigator.geolocation) {
-      alert("La géolocalisation n'est pas supportée par votre navigateur.");
+      alert(t("locationNotSupported"));
       return;
     }
 
@@ -30,22 +32,20 @@ const GetCurrentLocation: React.FC<GetCurrentLocationProps> = ({
 
           onLocationRetrieved(userAddress); // Retourne l'adresse via le callback
         } catch (error) {
-          console.error("Erreur lors de la récupération de l'adresse:", error);
-          alert("Impossible de récupérer l'adresse.");
+          alert(t("locationError"));
         } finally {
           setLoading(false);
         }
       },
-      (error) => {
-        console.error("Erreur de géolocalisation:", error);
-        alert("Impossible de récupérer votre position.");
+      () => {
+        alert(t("locationError"));
         setLoading(false);
       }
     );
   };
 
   return (
-    <div style={{display:"flex",justifyContent:"space-between"}}>
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
       <p
         style={{
           color: "#00A082",
@@ -56,9 +56,9 @@ const GetCurrentLocation: React.FC<GetCurrentLocationProps> = ({
         }}
         onClick={handleClick}
       >
-        Utiliser ma position
+        {t("usePosition")}
       </p>
-      <LineWaveSpinner visible={loading}/>
+      <LineWaveSpinner visible={loading} />
     </div>
   );
 };

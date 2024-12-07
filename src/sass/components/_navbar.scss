@@ -39,6 +39,9 @@
         }
 
        } 
+       &--wrapper{
+        position: relative;
+    }
        &--world{
         display: flex;
         align-items: center;
@@ -223,6 +226,7 @@ display: none;
         &__user > p{
             display: none;
         }
+
     }
 
   }

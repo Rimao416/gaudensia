@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useGetUserQuery, useRefreshTokenMutation } from "../slice/authSlice";
 
+
+
 const useUserData = () => {
   const { data: user, error, refetch } = useGetUserQuery(undefined, {
     skip: !Cookies.get("accessToken"), // Ne pas appeler l'API si pas de token
@@ -12,9 +14,9 @@ const useUserData = () => {
     const handleTokenRefresh = async () => {
       if (error && "status" in error && error.status === 401) {
         try {
-          // Rafraîchir le token
           const response = await refreshToken().unwrap();
-          const newAccessToken = response.accessToken;
+          console.log(response)
+          const newAccessToken = response;
 
           // Sauvegarder le nouveau token dans les cookies
           Cookies.set("accessToken", newAccessToken, { expires: 1 / 24 }); // Expiration dans 1 heure
@@ -22,7 +24,7 @@ const useUserData = () => {
           // Relancer la requête pour récupérer les données utilisateur
           refetch();
         } catch (refreshError) {
-          console.error("Erreur lors du rafraîchissement du token :", refreshError);
+          console.error("Erreur lors du rafraîchissement du token:", refreshError);
         }
       }
     };

@@ -1,11 +1,12 @@
 import React from "react";
+
 interface LanguageContextProps {
-  language: string;
+  language: string | null;
   setLanguage: (language: "fr" | "en" | "pl") => void;
 }
 
 export const LanguageContext = React.createContext<LanguageContextProps>({
-  language: localStorage.getItem("lang") || "fr",
+  language: localStorage.getItem("i18nextLng") ? localStorage.getItem("lang") : "fr", 
   setLanguage: () => {},
 });
 
@@ -13,7 +14,9 @@ export const LanguageContext = React.createContext<LanguageContextProps>({
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [language, setLanguage] = React.useState<"fr" | "en" | "pl">("fr");
+  const [language, setLanguage] = React.useState<"fr" | "en" | "pl">(
+    localStorage.getItem("i18nextLng") ? (localStorage.getItem("i18nextLng") as "fr" | "en" | "pl") : "fr"
+  );
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage }}>

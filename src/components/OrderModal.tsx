@@ -5,6 +5,8 @@ import {  setErrors, setLocation } from "../slice/cartSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import GetCurrentLocation from "./Location";
 import {  useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 interface OrderModalProps {
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
@@ -12,6 +14,7 @@ interface OrderModalProps {
 
 function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
   const navigate=useNavigate();
+  const {t}=useTranslation()
   const user = useAppSelector((state) => state.auth.user);
   const [credentials, setCredentials] = useState({
     deliveryAddress: "",
@@ -22,10 +25,10 @@ function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
   const [showErrors, setShowErrors] = useState<{ [key: string]: boolean }>({});
   const validationSchema = Joi.object({
     deliveryAddress: Joi.string().required().messages({
-      "string.empty": "L'adresse de livraison est requise",
+      "string.empty": i18n.t("validation.deliveryAddressRequired"),
     }),
     deliveryDetails: Joi.string().required().messages({
-      "string.empty": "Les détails de livraison sont requis",
+      "string.empty": i18n.t("validation.deliveryDetailsRequired"),
     }),
   });
 
@@ -89,12 +92,12 @@ function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
   return (
     <Modal isOpen={isModalOpen} onClose={handleClose}>
       <div style={{ padding: "20px" }}>
-        <h1 className="overlay__title">Détails de livraison</h1>
+        <h1 className="overlay__title">{t("orderDetails")}</h1>
         <form className="overlay__form" onSubmit={handleSubmit}>
           <div>
             <input
               type="text"
-              placeholder="Adresse de livraison"
+              placeholder={t("placeholderOrderAddress")}
               className={`overlay__input ${
                 errors && errors.deliveryAddress ? "input-error" : ""
               }`}
@@ -110,7 +113,7 @@ function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
           <div>
             <input
               type="text"
-              placeholder="Détails de livraison ex : Rue de la paix 12"
+              placeholder={t("placeholderOrderDetails")}
               className={`overlay__input ${
                 errors && errors.deliveryDetails ? "input-error" : ""
               }`}
@@ -124,7 +127,7 @@ function OrderModal({ isModalOpen, setIsModalOpen }: OrderModalProps) {
           </div>
 
           <button type="submit" className="button button__outline">
-            Confirmer
+            {t("confirm")}
           </button>
         </form>
       </div>

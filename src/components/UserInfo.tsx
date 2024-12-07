@@ -3,6 +3,7 @@ import { FaShoppingCart, FaBox, FaUser, FaSignOutAlt } from "react-icons/fa"; //
 import { IconType } from "react-icons"; // Importation du type IconType
 import ModalLayout from "../layouts/ModalLayout";
 import { IoClose } from "react-icons/io5";
+import i18next from "i18next";
 
 // Définition de l'interface List avec des icônes inline
 interface List {
@@ -11,10 +12,10 @@ interface List {
 }
 
 const myList: List[] = [
-  { name: "Panier", icon: FaShoppingCart }, // Icône Panier
-  { name: "Commande", icon: FaBox }, // Icône Commande
-  { name: "Compte", icon: FaUser }, // Icône Compte
-  { name: "Déconnexion", icon: FaSignOutAlt }, // Icône Déconnexion
+  { name: i18next.t("userDropdown.cart"), icon: FaShoppingCart }, // Icône Panier
+  { name: i18next.t("userDropdown.order"), icon: FaBox }, // Icône Commande
+  { name: i18next.t("userDropdown.account"), icon: FaUser }, // Icône Compte
+  { name: i18next.t("userDropdown.logout"), icon: FaSignOutAlt }, // Icône Déconnexion
 ];
 
 const IconList: React.FC = () => {

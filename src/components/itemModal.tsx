@@ -8,6 +8,7 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import { addItemToCart } from "../slice/cartSlice";
 import { IoClose } from "react-icons/io5";
 import { useMessages } from "../context/useMessage";
+import { useTranslation } from "react-i18next";
 
 interface ItemModalProps {
   data: dishes;
@@ -18,6 +19,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ data, onClose }) => {
   const { setMessage } = useMessages();
   const [isMobile, setIsMobile] = useState(false);
   const dispatch = useDispatch();
+  const {t}=useTranslation()
 
   // Récupère la quantité actuelle dans le panier pour cet article
   const itemInCart = useSelector((state: RootState) =>
@@ -111,7 +113,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ data, onClose }) => {
                 className="button button__outline"
                 onClick={handleAddToCart}
               >
-                {`Ajouter pour ${data.prices[0].price * quantity} PLN`}
+                {`${t("AddInCardFor")} ${data.prices[0].price * quantity} PLN`}
               </button>
             </div>
           </div>
@@ -149,7 +151,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ data, onClose }) => {
                 className="button button__outline"
                 onClick={handleAddToCart}
               >
-                {`Ajouter pour ${data.prices[0].price * quantity} PLN`}
+                {`${t("AddInCardFor")} ${data.prices[0].price * quantity} PLN`}
               </button>
             </div>
           </div>

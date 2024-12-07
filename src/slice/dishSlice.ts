@@ -10,10 +10,21 @@ interface CategoryWithDishes {
   };
   dishes: dishes[];
 }
+const customFetchBase = fetchBaseQuery({
+  baseUrl: API.defaults.baseURL,
+  prepareHeaders: (headers) => {
+    const language = localStorage.getItem("i18nextLng") || "fr";
+    headers.set("lang", language);
+    return headers;
+  },
+});
+
+
 
 export const dishesApi = createApi({
   reducerPath: "dishesApi",
-  baseQuery: fetchBaseQuery({ baseUrl: API.defaults.baseURL }),
+  baseQuery: customFetchBase,
+
   endpoints: (builder) => ({
     // Récupère tous les plats avec transformResponse pour renvoyer directement le tableau 'dishes'
     getDishes: builder.query<dishes[], void>({

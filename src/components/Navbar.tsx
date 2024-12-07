@@ -15,22 +15,36 @@ import { IoIosArrowDown } from "react-icons/io";
 import UserInfo from "./UserInfo";
 import { useGetUserQuery } from "../slice/authSlice";
 import { useLanguage } from "../context/useLanguage";
-
+import i18n from "../i18n";
+import { languages } from "../constants/data";
+import { useAppSelector } from "../store/store";
 function Navbar() {
   const location = useLocation();
   const [isUserToggle, setIsUserToggle] = useState(false);
-  const { isOverlayVisible, setOverlayVisible } = useOverlay();
+const user=useAppSelector((state)=>state.auth.user)
+console.log(user)
+const { isOverlayVisible, setOverlayVisible } = useOverlay();
   const [isSheetOpen, setSheetOpen] = useState(false);
   const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { data: user } = useGetUserQuery();
-  const {language}=useLanguage();
+  
+  const {language,setLanguage}=useLanguage();
   console.log(language)
+
+
+  const handleChange = (selectedOption: { value: string }) => {
+    const selectedLanguage = selectedOption.value as "fr" | "en" | "pl";
+    setLanguage(selectedLanguage); // Mets à jour le contexte
+    i18n.changeLanguage(selectedLanguage); // Mets à jour la langue dans i18n
+    setIsLanguageVisible(false);
+  };
+
   const authModalOpen = () => {
     setOverlayVisible(false);
     setAuthOverlayVisible(true);
   };
+  const [isLanguageVisible, setIsLanguageVisible] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -114,14 +128,32 @@ function Navbar() {
                 Connexion
               </button>
             )}
-            <div className="navigation__icons--language">
+            <div className="navigation__icons--wrapper">
+            <div className="navigation__icons--language" onClick={() => setIsLanguageVisible(!isLanguageVisible)}>
               <span className="navigation__icons--world">
                 <TfiWorld />
               </span>
-              <p>{language.toUpperCase()}</p>
+              <p>{language && language.toUpperCase()}</p>
+
+
               <span className="navigation__icons--arrow">
                 <IoIosArrowDown />
               </span>
+            </div>
+            {isLanguageVisible &&   <div className="dropdown">
+                {languages.map((language) => (
+                  <div
+                    className="navigation__icons--language"
+                    key={language}
+                    onClick={() => handleChange({ value: language })}
+                  >
+                    <p>{language.toUpperCase()}</p>
+                  </div>
+                ))}
+              
+              </div>}
+          
+
             </div>
           </div>
         </div>

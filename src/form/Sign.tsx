@@ -9,8 +9,10 @@ import { useAuthOverlay } from "../context/useAuthOverlay";
 import { IoClose } from "react-icons/io5";
 
 import GetCurrentLocation from "../components/Location";
+import { useTranslation } from "react-i18next";
 
 function Sign() {
+  const {t}=useTranslation()
   // const { setMessage } = useMessages();
   // const dispatch = useAppDispatch();
   const { setAuthOverlayVisible, setType } = useAuthOverlay();
@@ -87,8 +89,8 @@ function Sign() {
           <IoClose />
         </span>
       </div>
-      <h1 className="overlay__title">Inscription</h1>
-      <p className="overlay__text">Bienvenue chez Gaudensia</p>
+      <h1 className="overlay__title">{t("sign")}</h1>
+      <p className="overlay__text">{t("signMessage")}</p>
       <form className="overlay__form" onSubmit={handleSubmit}>
         <div>
           <input
@@ -144,10 +146,10 @@ function Sign() {
         </div>
 
         <button type="submit" className="button button__outline">
-          S'enregistrer
+          {t("signButton")}
         </button>
         <p className="overlay__text">
-          Vous avez déjà un compte ?{" "}
+          {t("signAlert")}{" "}
           <span
             style={{ color: "#FF6060", cursor: "pointer" }}
             onClick={(e) => {
@@ -155,7 +157,7 @@ function Sign() {
               setType("login");
             }}
           >
-            Se connecter
+            {t("signAlternate")}
           </span>
         </p>
       </form>

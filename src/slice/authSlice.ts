@@ -2,8 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { user } from "../interface/user";
-import { API } from "../config";
-
+import {API} from "../config";
 // Définition de l'API RTK Query
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -11,7 +10,7 @@ export const authApi = createApi({
     baseUrl: API.defaults.baseURL, // L'URL de base
     credentials: "include", // Inclure les cookies
     prepareHeaders: (headers) => {
-      const token = Cookies.get("token");
+      const token = Cookies.get("accessToken");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -36,11 +35,12 @@ export const authApi = createApi({
     getUser: builder.query<user, void>({
       query: () => "/user",
     }),
-    refreshToken: builder.mutation<user, void>({
+    refreshToken: builder.mutation<string, void>({
       query: () => ({
         url: "/auth/refresh",
         method: "POST",
       }),
+      transformResponse: (response: { accessToken: string }) => response.accessToken,
     }),
   }),
 });
@@ -77,7 +77,7 @@ const authSlice = createSlice({
       })
       .addMatcher(authApi.endpoints.login.matchFulfilled, (state, { payload }) => {
         state.user = payload;
-        Cookies.set("token", payload.token);
+        Cookies.set("accessToken", payload.token);
       })
       .addMatcher(authApi.endpoints.login.matchRejected, (state, { payload }) => {
         if (payload) {
@@ -88,10 +88,7 @@ const authSlice = createSlice({
       .addMatcher(authApi.endpoints.getUser.matchFulfilled, (state, { payload }) => {
         state.user = payload;
       })
-      .addMatcher(authApi.endpoints.refreshToken.matchFulfilled, (state, { payload }) => {
-        state.user = payload;
-        Cookies.set("token", payload.token);
-      });
+     
   },
 });
 

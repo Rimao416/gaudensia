@@ -1,4 +1,4 @@
-export const language = ["fr", "en", "pl"];
+export const languages = ["fr", "en", "pl"];
 
 // Définition d'un type pour un plat unique
 interface Dish {

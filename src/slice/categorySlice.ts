@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { category } from "../interface/category";
-import { API } from "../config";
+import {API}  from "../config";
 
 // Define the API slice for categories
 export const categoryApi = createApi({
@@ -9,9 +9,12 @@ export const categoryApi = createApi({
     baseUrl: API.defaults.baseURL,
     credentials: "include",
   }),
+
+
   endpoints: (builder) => ({
     getCategories: builder.query<category[], void>({
       query: () => "/categories",
+      transformResponse: (response: { categories: category[] }) => response.categories, // Récupère directement le tableau 'dishes'
     }),
   }),
 });
