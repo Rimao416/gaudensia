@@ -168,7 +168,11 @@
       margin-bottom: 20px;
       border: 1px solid #e2e2e2;
       border-radius: 24px;
-  
+  form{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
       input {
         border: none;
         outline: none;
@@ -308,6 +312,15 @@
     }
     &__dropdown{
         display: none;
+    }
+    &__underline{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      span{
+        cursor: pointer;
+      }
     }
 
   }

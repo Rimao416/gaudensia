@@ -83,6 +83,7 @@
     "order":"Order"
   },
   "loginSuccess":"Login Success",
-  "loginError":"Login Error"
+  "loginError":"Login Error",
+  "search": "Search"
 
 }

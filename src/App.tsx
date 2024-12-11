@@ -1,7 +1,6 @@
 import "./main.scss";
 import "./App.scss";
 import { Route, Routes } from "react-router-dom";
-import Menu from "./pages/Menu";
 import useUserData from "./components/userData";
 import Category from "./pages/Category";
 import Plats from "./pages/Plats";
@@ -10,6 +9,8 @@ import { lazy, Suspense } from "react";
 
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
+const Menu= lazy(() => import("./pages/Menu"));
+const Order= lazy(() => import("./pages/Order"));
 
 function App() {
   useUserData();
@@ -29,9 +30,27 @@ function App() {
           <Suspense fallback={<div>Loading...</div>}>
             <About />
           </Suspense>
+          
         }
       />
-      <Route path="/menu" element={<Menu />} />
+      <Route
+        path="/menu"
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Menu />
+          </Suspense>
+          
+        }
+      />
+      <Route
+        path="/order"
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <Order />
+          </Suspense>
+          
+        }
+      />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/menu/:id" element={<Category />} />
       <Route path="/plats/:id" element={<Plats />} />

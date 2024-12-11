@@ -39,7 +39,15 @@ export const dishesApi = createApi({
 
     // Recherche de plats par terme de recherche (sans transformation de réponse)
     searchDish: builder.query<dishes[], string>({
-      query: (searchTerm) => `/dishes?search=${searchTerm}`,
+      query: (searchTerm) => `/dishes/search?search=${searchTerm}`,
+      transformResponse: (response: { dishes?: dishes[] }, meta) => {
+        console.log(meta)
+        if (meta?.response?.status === 404) {
+          return []; // Retourner un tableau vide en cas de 404
+        }
+        console.log(response)
+        return response as dishes[] || [];
+      },
     }),
 
     // Récupère les menus par catégories (sans transformation de réponse)

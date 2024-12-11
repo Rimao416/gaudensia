@@ -4,8 +4,6 @@ import axios from "axios"
 // import { setCr edentials } from "./slice/authSlice";
 export const assetsURL="http://localhost:5000/api/v1"
 export const API = axios.create({ baseURL: "http://localhost:5000/api/v1" });
-
-  
   
   
 // API.interceptors.response.use(

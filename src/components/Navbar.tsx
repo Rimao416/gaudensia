@@ -13,7 +13,6 @@ import BottomSheet from "./BottomSheet";
 import { TfiWorld } from "react-icons/tfi";
 import { IoIosArrowDown } from "react-icons/io";
 import UserInfo from "./UserInfo";
-import { useGetUserQuery } from "../slice/authSlice";
 import { useLanguage } from "../context/useLanguage";
 import i18n from "../i18n";
 import { languages } from "../constants/data";
@@ -22,7 +21,6 @@ function Navbar() {
   const location = useLocation();
   const [isUserToggle, setIsUserToggle] = useState(false);
 const user=useAppSelector((state)=>state.auth.user)
-console.log(user)
 const { isOverlayVisible, setOverlayVisible } = useOverlay();
   const [isSheetOpen, setSheetOpen] = useState(false);
   const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();

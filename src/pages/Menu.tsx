@@ -2,9 +2,9 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { IoMdSearch } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-
+import { RxCross2 } from "react-icons/rx";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -22,13 +22,26 @@ import { useAuthOverlay } from "../context/useAuthOverlay";
 import { useMessages } from "../context/useMessage";
 import OrderModal from "../components/OrderModal";
 import BottomCart from "../components/BottomCart";
-import { useFetchMenuByCategoriesQuery } from "../slice/dishSlice";
+import {
+  useFetchMenuByCategoriesQuery,
+  useSearchDishQuery,
+} from "../slice/dishSlice";
 import { useTranslation } from "react-i18next";
+import { useGetCategoriesQuery } from "../slice/categorySlice";
+import Button from "../components/Button";
 function Menu() {
-  const {t,i18n}=useTranslation()
+  const [search, setSearch] = useState<string>("");
+  const [submittedSearch, setSubmittedSearch] = useState<string>(""); // Terme soumis
+  const [isSearching, setIsSearching] = useState(false); // Nouvel état
+  const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
-  const {data:categoriesWithDishes,refetch}=useFetchMenuByCategoriesQuery();
-
+  const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const { data: categoriesWithDishes, refetch } =
+    useFetchMenuByCategoriesQuery();
+  const { data: searchResults } = useSearchDishQuery(submittedSearch, {
+    skip: !submittedSearch.trim(), // Pas de requête si le terme soumis est vide
+  });
+  const { data: categories } = useGetCategoriesQuery();
   const [isBottomCartOpen, setIsBottomCartOpen] = useState(false);
   const { items } = useAppSelector((state) => state.cart);
   const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
@@ -37,20 +50,51 @@ function Menu() {
   const { setMessage } = useMessages();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const tableUnderlineRef = useRef<HTMLDivElement | null>(null); // Référence à la div table__underline
   const [activeCategory, setActiveCategory] = useState<string>("all"); // "all" actif par défaut
-  const [search, setSearch] = useState<string>("");
-  const [isSearching, setIsSearching] = useState(false); // Nouvel état
+  const resetButtonRef = useRef<HTMLSpanElement | null>(null); // Référence à la croix de réinitialisation
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId); // Définir la catégorie active
+    const targetElement = categoryRefs.current[categoryId];
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const handleFocus = () => {
+    setIsFocused(true); // Met à jour isFocused à true lorsque l'input reçoit le focus
+  };
+
+  const resetString = () => {
+    setSubmittedSearch("");
+  };
+
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      tableUnderlineRef.current &&
+      !tableUnderlineRef.current.contains(e.target as Node)
+    ) {
+      setIsFocused(false); // Si le clic est en dehors de table__underline, on perd le focus
+    }
+  };
+
+  useEffect(() => {
+    // Ajouter un écouteur de clic pour fermer le focus quand on clique en dehors
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      // Nettoyer l'écouteur quand le composant est démonté
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
   useEffect(() => {
     refetch();
-  }, [i18n.language,refetch]);
+  }, [i18n.language, refetch]);
 
   const handleSubmit = () => {
     // Check if user is connected
@@ -63,16 +107,16 @@ function Menu() {
   };
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await dispatch(searchDish(search)).unwrap();
-    console.log(response);
+    setIsSearching(true);
+    setSubmittedSearch(search); // Met à jour le terme soumis avec la saisie actuelle
 
-    // Si la recherche renvoie des résultats, active l'état `isSearching`
-    if (response) {
-      setIsSearching(true);
-    }
+    // Simuler un délai pour montrer que la recherche est en cours
+    setTimeout(() => setIsSearching(false), 500); // Simule un état de recherche
 
-    // Check if user is connected
+    // Fermer le modal
+    // toggleModal();
   };
+ 
 
   return (
     <>
@@ -122,9 +166,7 @@ function Menu() {
           <div className="table__up">
             <div className="table__up--text">
               <h1>{t("menuInfo")}</h1>
-              <p>
-                {t("menuDescription")}
-              </p>
+              <p>{t("menuDescription")}</p>
               <p
                 className="cart"
                 style={{ cursor: "pointer" }}
@@ -152,15 +194,46 @@ function Menu() {
               <div className="table__dropdown" onClick={toggleModal}>
                 <FaSearch className="table__icondrop" />
               </div>
-              <div className="table__search">
+         
+              <motion.div
+                className="table__search"
+                initial={{ width: "20%" }} // Largeur initiale
+                animate={{ width: isFocused ? "50%" : "20%" }} // Animation en fonction de l'état de focus
+                transition={{ type: "spring", stiffness: 200, damping: 25 }} // Animation fluide avec spring
+              >
                 <IoMdSearch className="table__icon" />
-                <input type="text" placeholder="Rechercher" />
-              </div>
+                <form action="" style={{ width: "100%" }} onSubmit={handleSearch}>
+
+                <input
+                  type="text"
+                  placeholder="Rechercher"
+                  onChange={(e) => setSearch(e.target.value)}
+                  onFocus={handleFocus}
+                />
+                {isFocused && (
+                  <div className="table__underline" ref={tableUnderlineRef}>
+                    <span onClick={resetString}>
+                      <RxCross2 />
+                    </span>
+                    <button
+                      className="button button__outline"
+                      type="submit"
+                      
+                    >
+                      {t("search")}
+                    </button>
+                  </div>
+                )}
+                </form>
+              </motion.div>
+
+        
               <Swiper
                 className="table__categories"
                 modules={[Navigation]}
                 slidesPerView={4}
                 spaceBetween={40}
+                style={isFocused ? { display: "none" } : {}}
                 breakpoints={{
                   0: {
                     slidesPerView: 2,
@@ -172,40 +245,66 @@ function Menu() {
                   },
                 }}
               >
-               
+                {categories &&
+                  categories.map((category) => (
+                    <SwiperSlide key={category._id}>
+                      <div
+                        className={`table__category ${
+                          activeCategory === category._id
+                            ? "table__category--active"
+                            : ""
+                        }`}
+                        onClick={() => handleCategoryClick(category._id)}
+                      >
+                        {truncateTitle(category.name, 15)}
+                      </div>
+                    </SwiperSlide>
+                  ))}
               </Swiper>
             </div>
             <div className="table__wrapper">
-              {isSearching ? (
+              {submittedSearch.length > 0 && searchResults ? (
                 <div className="table__container">
                   <div className="table__response">
-                    <h1>{t("searchCommand")}{search}"</h1>
+                    <h1>
+                      {t("searchCommand")}
+                      {submittedSearch}"
+                    </h1>
                     {/* Parcourir les résultats de recherche */}
                     <div className="table__items">
-                  
+                      {searchResults.length != 0 ? (
+                        searchResults.map((dish) => (
+                          <Item key={dish._id} {...dish} />
+                        ))
+                      ) : (
+                        <p>Aucun résultat trouvé pour "{search}".</p>
+                      )}
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="table__container">
-                  {/* Affichage par catégories lorsque la recherche n'est pas active */}
+                  {/* Affichage par catégories lorsque la recherche n' est pas active */}
                   <div className="table__container">
-                  {/* Affichage par catégories lorsque la recherche n'est pas active */}
-                  {categoriesWithDishes &&
-                    categoriesWithDishes.map((category) => (
-                      <div
-                        key={category.category._id}
-                        className="table__content"
-                      >
-                        <h2>{category.category.name}</h2>
-                        <div className="table__items">
-                          {category.dishes.map((dish) => (
-                            <Item key={dish._id} {...dish} />
-                          ))}
+                    {/* Affichage par catégories lorsque la recherche n'est pas active */}
+                    {categoriesWithDishes &&
+                      categoriesWithDishes.map((category) => (
+                        <div
+                          key={category.category._id}
+                          className="table__content"
+                          ref={(el) =>
+                            (categoryRefs.current[category.category._id] = el)
+                          } // Assigner la référence
+                        >
+                          <h2>{category.category.name}</h2>
+                          <div className="table__items">
+                            {category.dishes.map((dish) => (
+                              <Item key={dish._id} {...dish} />
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                </div>
+                      ))}
+                  </div>
                 </div>
               )}
 
@@ -220,7 +319,9 @@ function Menu() {
                             <li key={item.id} className="table__order--item">
                               <div className="table__order--details">
                                 <h4>{item.name}</h4>
-                                <p>{t("quantity")} : {item.quantity}</p>
+                                <p>
+                                  {t("quantity")} : {item.quantity}
+                                </p>
                                 <p>{item.price} PLN</p>
                               </div>
                             </li>
@@ -292,7 +393,11 @@ function Menu() {
         <OrderModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       )}
       {isBottomCartOpen && (
-        <BottomCart isOpen={isBottomCartOpen} onClose={setIsBottomCartOpen} items={items} />
+        <BottomCart
+          isOpen={isBottomCartOpen}
+          onClose={setIsBottomCartOpen}
+          items={items}
+        />
       )}
     </>
   );

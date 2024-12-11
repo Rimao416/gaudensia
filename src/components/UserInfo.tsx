@@ -1,24 +1,23 @@
 import React from "react";
-import { FaShoppingCart, FaBox, FaUser, FaSignOutAlt } from "react-icons/fa"; // Importation des icônes
-import { IconType } from "react-icons"; // Importation du type IconType
+import { FaShoppingCart, FaBox, FaUser, FaSignOutAlt } from "react-icons/fa";
 import ModalLayout from "../layouts/ModalLayout";
 import { IoClose } from "react-icons/io5";
-import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 
-// Définition de l'interface List avec des icônes inline
 interface List {
   name: string;
-  icon: IconType;
+  icon: React.ElementType;
 }
 
-const myList: List[] = [
-  { name: i18next.t("userDropdown.cart"), icon: FaShoppingCart }, // Icône Panier
-  { name: i18next.t("userDropdown.order"), icon: FaBox }, // Icône Commande
-  { name: i18next.t("userDropdown.account"), icon: FaUser }, // Icône Compte
-  { name: i18next.t("userDropdown.logout"), icon: FaSignOutAlt }, // Icône Déconnexion
-];
-
 const IconList: React.FC = () => {
+  const { t } = useTranslation(); // Hook pour les traductions
+
+  const myList: List[] = [
+    { name: t("userDropdown.order"), icon: FaBox },
+    { name: t("userDropdown.account"), icon: FaUser },
+    { name: t("userDropdown.logout"), icon: FaSignOutAlt },
+  ];
+
   return (
     <ModalLayout type="custom">
       <div className="overlay__close">
@@ -30,7 +29,7 @@ const IconList: React.FC = () => {
         {myList.map((item, index) => (
           <div key={index} className="info__wrapper">
             <span>
-              <item.icon /> {/* Icône inline */}
+              <item.icon />
             </span>
             <p>{item.name}</p>
           </div>

@@ -83,5 +83,6 @@
     "order":"Commande"
   },
   "loginSuccess":"Connexion reussie",
-  "loginError":"Connexion echouee"
+  "loginError":"Connexion echouee",
+  "search":"Rechercher"
 }
