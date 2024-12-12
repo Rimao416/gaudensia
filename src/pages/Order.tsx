@@ -1,14 +1,33 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import { useTranslation } from 'react-i18next'
+import Navbar from "../components/Navbar";
+import { useTranslation } from "react-i18next";
+import { useGetOrdersQuery } from "../slice/orderSlice";
+import OrderComponent from "../components/Order";
+import { useState } from "react";
+import Modal from "../components/Modal";
+
+import { order } from "../interface/order";
+import OrderDetails from "../components/OrderDetails";
 
 function Order() {
-    const {t}=useTranslation()
+  const { data: orders } = useGetOrdersQuery();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<order | null>(null);
+  const handleOpenModal = (myOrder: order) => {
+    setSelectedOrder(myOrder);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
+  };
+  const { t } = useTranslation();
   return (
-    <div className="parent">
-      <Navbar/>
-      <div className="myOrder">
-      <div className="myOrder__up">
+    <>
+      <div className="parent">
+        <Navbar />
+        <div className="myOrder">
+          <div className="myOrder__up">
             <div className="myOrder__up--text">
               <h1>{t("menuInfo")}</h1>
               <p>{t("menuDescription")}</p>
@@ -29,13 +48,22 @@ function Order() {
             </div>
           </div>
 
-        <div className="myOrder__body">
-            
-        </div>
-        
+          <div className="myOrder__body">
+            {orders?.map((order) => (
+              <div className="myOrder__box" key={order._id}  onClick={() => handleOpenModal(order)}>
+                <OrderComponent {...order} />
+              </div>
+            ))}
           </div>
-    </div>
-  )
+        </div>
+      </div>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        {selectedOrder && (
+         <OrderDetails order={selectedOrder}/>
+        )}
+      </Modal>
+    </>
+  );
 }
 
-export default Order
+export default Order;

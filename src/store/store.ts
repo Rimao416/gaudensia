@@ -7,11 +7,15 @@ import authReducer from "../slice/authSlice"
 import cartSlice from "../slice/cartSlice";
 import saveCartToLocalStorage from "./listener";
 import { testimonialApi } from "../slice/testimonialSlice";
+import { cartApi } from "../slice/cartApi";
+import { orderApi } from "../slice/orderSlice";
 export const store = configureStore({
   reducer: {
     [categoryApi.reducerPath]: categoryApi.reducer,
     [dishesApi.reducerPath]:dishesApi.reducer,
     [authApi.reducerPath]:authApi.reducer,
+    [cartApi.reducerPath]:cartApi.reducer,
+    [orderApi.reducerPath]:orderApi.reducer,
     auth: authReducer,
     [testimonialApi.reducerPath]: testimonialApi.reducer,
     cart: cartSlice,
@@ -25,6 +29,8 @@ export const store = configureStore({
     .concat(dishesApi.middleware) // Ajoute le middleware RTK Query ici
     .concat(categoryApi.middleware)
     .concat(testimonialApi.middleware)
+    .concat(cartApi.middleware)
+    .concat(orderApi.middleware)
     .concat(saveCartToLocalStorage),
 });
 

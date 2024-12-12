@@ -5,10 +5,10 @@ import { dishes } from "../interface/dishes";
 import BottomSheet from "./BottomSheet";
 import Modal from "./Modal";
 import { FaPlus, FaMinus } from "react-icons/fa6";
-import { addItemToCart } from "../slice/cartSlice";
 import { IoClose } from "react-icons/io5";
 import { useMessages } from "../context/useMessage";
 import { useTranslation } from "react-i18next";
+import { addItemToCart } from "../slice/cartSlice";
 
 interface ItemModalProps {
   data: dishes;

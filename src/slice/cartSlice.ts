@@ -1,7 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import {API} from "../config";
-import Cookies from "js-cookie";
-import axios from "axios";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { cartApi } from "./cartApi";
 
 export interface CartItem {
   id: string;
@@ -10,50 +8,26 @@ export interface CartItem {
   quantity: number;
 }
 
-interface CartState {
+export interface CartState {
   items: CartItem[];
   deliveryAddress: string;
   deliveryDetails: string;
   status: "idle" | "loading" | "succeeded" | "failed";
-  errors: {
-    [key: string]: string | null;
-  } | null;
+  errors: { [key: string]: string | null } | null;
   allergies: string;
   totalPrice: number;
 }
 
 const initialState: CartState = {
-  items: JSON.parse(localStorage.getItem("cart") || "[]"), // Charge les données
-  status: "idle",
-  errors: {
-    deliveryAddress: "",
-    deliveryDetails: "",
-  },
-  allergies: "",
-  totalPrice: 0,
+  items: JSON.parse(localStorage.getItem("cart") || "[]"),
   deliveryAddress: "",
   deliveryDetails: "",
+  status: "idle",
+  errors: null,
+  allergies: "",
+  totalPrice: 0,
 };
 
-// Créez un thunk pour l'ajout d'un article au panier en base de données
-export const addItemToCartDb = createAsyncThunk(
-  "cart/addItemToCartDb",
-  async (cart: Partial<CartState>, { rejectWithValue }) => {
-    // Utilisation de Partial<CartState>
-    try {
-      const token = Cookies.get("accessToken");
-      API.defaults.withCredentials = true;
-      API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      const response = await API.post("/cart", cart);
-      return response.data; // Si tout va bien, renvoyer la réponse
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data);
-      }
-      return rejectWithValue("Erreur inconnue");
-    }
-  }
-);
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -61,14 +35,14 @@ const cartSlice = createSlice({
     addItemToCart: (state, action: PayloadAction<CartItem>) => {
       const item = state.items.find((i) => i.id === action.payload.id);
       if (item) {
-        console.log("Mise à jour de l'article :", item);
-        item.quantity = action.payload.quantity;
-        item.price = action.payload.price * item.quantity; // Recalculer le prix
+        item.quantity += action.payload.quantity;
+        item.price =
+          (item.price / (item.quantity - action.payload.quantity)) *
+          item.quantity;
       } else {
-        console.log("Ajout d'un nouvel article :", action.payload);
         state.items.push({
           ...action.payload,
-          price: action.payload.price * action.payload.quantity, // Calcul du prix total
+          price: action.payload.price * action.payload.quantity,
         });
       }
       state.totalPrice = state.items.reduce((sum, item) => sum + item.price, 0);
@@ -76,9 +50,6 @@ const cartSlice = createSlice({
     removeItemFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((i) => i.id !== action.payload);
       state.totalPrice = state.items.reduce((sum, item) => sum + item.price, 0);
-    },
-    clearCart: (state) => {
-      state.items = [];
     },
     incrementItemQuantity: (state, action: PayloadAction<string>) => {
       const item = state.items.find((i) => i.id === action.payload);
@@ -98,6 +69,10 @@ const cartSlice = createSlice({
       }
       state.totalPrice = state.items.reduce((sum, item) => sum + item.price, 0);
     },
+    clearCart: (state) => {
+      state.items = [];
+      state.totalPrice = 0;
+    },
     setErrors: (
       state,
       action: PayloadAction<{ [key: string]: string | null }>
@@ -105,7 +80,7 @@ const cartSlice = createSlice({
       state.errors = action.payload;
     },
     setAllergies: (state, action: PayloadAction<string>) => {
-      state.allergies = action.payload; // Met à jour la chaîne des allergies globales
+      state.allergies = action.payload;
     },
     setLocation: (
       state,
@@ -114,25 +89,19 @@ const cartSlice = createSlice({
         deliveryDetails: string;
       }>
     ) => {
-      console.log(action.payload);
+      console.log(action)
       state.deliveryAddress = action.payload.deliveryAddress;
       state.deliveryDetails = action.payload.deliveryDetails;
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(addItemToCartDb.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(addItemToCartDb.fulfilled, (state) => {
-        state.status = "succeeded";
+    builder.addMatcher(
+      cartApi.endpoints.addItemToCart.matchFulfilled,
+      (state) => {
         state.items = [];
-        state.totalPrice = 0;
-      })
-      .addCase(addItemToCartDb.rejected, (state, action) => {
-        state.status = "failed";
-        console.error(action.payload); // Traitez ici l'erreur reçue
-      });
+        state.totalPrice = 0; // On efface le panier
+      }
+    );
   },
 });
 
@@ -140,11 +109,11 @@ export const {
   addItemToCart,
   removeItemFromCart,
   clearCart,
-  incrementItemQuantity,
-  decrementItemQuantity,
   setErrors,
   setAllergies,
   setLocation,
+  incrementItemQuantity,
+  decrementItemQuantity,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

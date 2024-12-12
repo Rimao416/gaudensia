@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import {
-  addItemToCartDb,
   decrementItemQuantity,
   incrementItemQuantity,
 } from "../slice/cartSlice";
@@ -11,7 +10,9 @@ import AllergiaModal from "../components/AllergiaModal";
 import { useMessages } from "../context/useMessage";
 import { useNavigate } from "react-router-dom";
 import MessageDisplay from "../components/MessageDisplay";
+import { useAddItemToCartMutation } from "../slice/cartApi";
 function Checkout() {
+  const [addItemToCartDb] = useAddItemToCartMutation();
   interface ErrorType extends Error {
     message: string;
   }
@@ -27,8 +28,8 @@ function Checkout() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOrder = async () => {
     try {
-      await dispatch(
-        addItemToCartDb({
+      const response=await (
+        addItemToCartDb({  
           items,
           totalPrice,
           allergies,
@@ -36,10 +37,13 @@ function Checkout() {
           deliveryDetails,
         })
       ).unwrap();
+      console.log(response)
 
       setMessage("Commande enregistrée", "success");
       // Ajouter ici des actions après succès de la commande (ex. redirection, message de succès)
     } catch (error: unknown) {
+      console.log(error)
+      setMessage("Une erreur s'est produite","error")
       setMessage((error as ErrorType).message, "error");
       // Ajouter ici un message d'erreur pour l'utilisateur
     }
@@ -60,29 +64,29 @@ function Checkout() {
 
           <div className="order-summary__product-list">
             {items.map((item) => (
-              <div className="order-summary__product" key={item.id}>
-                <div className="order-summary__btn">
-                  <button
-                    className="order-summary__quantity-btn"
-                    onClick={() => dispatch(decrementItemQuantity(item.id))}
-                    aria-label="Decrement quantity"
-                  >
-                    -
-                  </button>
-                  <span className="order-summary__quantity">
-                    {item.quantity}
-                  </span>
-                  <button
-                    className="order-summary__quantity-btn"
-                    onClick={() => dispatch(incrementItemQuantity(item.id))}
-                    aria-label="Increment quantity"
-                  >
-                    +
-                  </button>
-                </div>
-                <span className="order-summary__product-name">{item.name}</span>
-                <span className="order-summary__price">{item.price} PNL</span>
-              </div>
+             <div className="order-summary__product" key={item.id}>
+             <div className="order-summary__btn">
+               <button
+                 className="order-summary__quantity-btn"
+                 onClick={() => dispatch(decrementItemQuantity(item.id))}
+                 aria-label="Decrement quantity"
+               >
+                 -
+               </button>
+               <span className="order-summary__quantity">
+                 {item.quantity}
+               </span>
+               <button
+                 className="order-summary__quantity-btn"
+                 onClick={() => dispatch(incrementItemQuantity(item.id))}
+                 aria-label="Increment quantity"
+               >
+                 +
+               </button>
+             </div>
+             <span className="order-summary__product-name">{item.name}</span>
+             <span className="order-summary__price">{item.price} PNL</span>
+           </div>
             ))}
           </div>
 

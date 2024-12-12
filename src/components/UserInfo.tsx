@@ -1,5 +1,5 @@
 import React from "react";
-import { FaShoppingCart, FaBox, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaBox, FaUser, FaSignOutAlt } from "react-icons/fa";
 import ModalLayout from "../layouts/ModalLayout";
 import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";

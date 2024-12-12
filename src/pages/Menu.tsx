@@ -2,7 +2,7 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { IoMdSearch } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { RxCross2 } from "react-icons/rx";
 import "swiper/css";
@@ -15,8 +15,8 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import Item from "../components/Item";
 import Shopping from "../assets/shopping.png";
 import {
-  decrementItemQuantity,
   incrementItemQuantity,
+  decrementItemQuantity,
 } from "../slice/cartSlice";
 import { useAuthOverlay } from "../context/useAuthOverlay";
 import { useMessages } from "../context/useMessage";
@@ -28,11 +28,10 @@ import {
 } from "../slice/dishSlice";
 import { useTranslation } from "react-i18next";
 import { useGetCategoriesQuery } from "../slice/categorySlice";
-import Button from "../components/Button";
 function Menu() {
   const [search, setSearch] = useState<string>("");
   const [submittedSearch, setSubmittedSearch] = useState<string>(""); // Terme soumis
-  const [isSearching, setIsSearching] = useState(false); // Nouvel état
+  const [_isSearching, setIsSearching] = useState(false); // Nouvel état
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
   const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -52,7 +51,6 @@ function Menu() {
 
   const tableUnderlineRef = useRef<HTMLDivElement | null>(null); // Référence à la div table__underline
   const [activeCategory, setActiveCategory] = useState<string>("all"); // "all" actif par défaut
-  const resetButtonRef = useRef<HTMLSpanElement | null>(null); // Référence à la croix de réinitialisation
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId); // Définir la catégorie active
     const targetElement = categoryRefs.current[categoryId];
@@ -327,7 +325,7 @@ function Menu() {
                             </li>
                           </ul>
                           <div className="table__order--options">
-                            <span
+                          <span
                               onClick={() =>
                                 dispatch(decrementItemQuantity(item.id))
                               }

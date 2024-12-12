@@ -3,9 +3,11 @@ import BottomSheet from "./BottomSheet";
 import {
   CartItem,
   clearCart,
-  decrementItemQuantity,
   incrementItemQuantity,
+  decrementItemQuantity
 } from "../slice/cartSlice";
+
+
 import Shopping from "../assets/shopping.png";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { FaMinus, FaPlus } from "react-icons/fa";
