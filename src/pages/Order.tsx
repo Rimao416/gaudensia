@@ -57,7 +57,7 @@ function Order() {
           </div>
         </div>
       </div>
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} containerStyle={{width:"600px"}}>
         {selectedOrder && (
          <OrderDetails order={selectedOrder}/>
         )}
