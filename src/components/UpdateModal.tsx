@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { getEmailValidationSchema } from "../constants/validate";
-import { setErrors } from "../slice/authSlice";
+import {
+  getEmailValidationSchema,
+  getFullNameValidationSchema,
+  getPasswordValidationSchema,
+} from "../constants/validate";
+import { setErrors, useUpdateUserMutation } from "../slice/authSlice";
 import Joi from "joi";
 
 interface UpdateModalProps {
@@ -25,7 +29,11 @@ const UpdateModal = ({
     fullName: "",
     password: "",
     phoneNumber: "",
+    newPassword: "",
+    confirmPassword: "",
   });
+
+  const [updateUser] = useUpdateUserMutation();
   const { errors } = useAppSelector((state) => state.auth);
   useEffect(() => {
     const timers = Object.keys(showErrors).map((key) =>
@@ -52,10 +60,26 @@ const UpdateModal = ({
         break;
       }
       case "fullName": {
-        // Ajouter la validation du nom complet si nécessaire
+        const validation = getFullNameValidationSchema().validate(
+          { fullName: credentials.fullName }, // Passer un objet avec `email`
+          {
+            abortEarly: false,
+          }
+        );
+        error = validation.error || null;
         break;
       }
       case "password": {
+        const validation = getPasswordValidationSchema().validate(
+          {
+            password: credentials.password,
+            newPassword: credentials.newPassword,
+            confirmPassword: credentials.confirmPassword,
+          },
+          { abortEarly: false }
+        );
+        error = validation.error || null;
+
         // Ajouter la validation du mot de passe si nécessaire
         break;
       }
@@ -82,26 +106,55 @@ const UpdateModal = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const field = e.target.name;
-    setCredentials({ ...credentials, [field]: e.target.value });
-    console.log(errors[field])
+    const value = e.target.value;
+
+    // Mettre à jour les valeurs des credentials
+    setCredentials({ ...credentials, [field]: value });
+
+    // Effacer l'erreur pour ce champ dans le store Redux
     if (errors && errors[field]) {
+      dispatch(
         setErrors({
           ...errors,
           [field]: null, // Effacer l'erreur pour ce champ
-        });
-  
-        // Afficher les erreurs après validation
-        setShowErrors({
-          ...showErrors,
-          [field]: true, // Afficher l'erreur pour ce champ spécifique
-        });
-      }
+        })
+      );
+    }
+
+    // Afficher une erreur temporaire si nécessaire
+    setShowErrors({
+      ...showErrors,
+      [field]: true, // Gère l'affichage local des erreurs
+    });
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(errors);
-    console.log(handleValidation());
-    console.log(credentials)
+    if (handleValidation()) {
+      switch (type) {
+        case "email": {
+          const response = await updateUser({
+            email: credentials.email,
+          }).unwrap();
+          console.log(response);
+          break;
+        }
+        case "fullName": {
+          const response = await updateUser({
+            fullName: credentials.fullName,
+          }).unwrap();
+          console.log(response);
+          break;
+        }
+        case "password":
+          console.log(credentials);
+          break;
+        case "phoneNumber":
+          await updateUser({ phoneNumber: credentials.phoneNumber });
+          break;
+        default:
+      }
+    }
   };
 
   const renderForm = () => {
@@ -160,16 +213,39 @@ const UpdateModal = ({
           <form className="overlay__form" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="newPassword" className="overlay__label">
+                Mot de passe actuel
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Nouveau mot de passe"
+                className={`overlay__input ${
+                  errors && errors.password ? "input-error" : ""
+                }`}
+                name="password"
+                onChange={handleChange}
+              />
+              {errors && errors.password && (
+                <p className="error-text">{errors && errors.password}</p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="newPassword" className="overlay__label">
                 Nouveau mot de passe
               </label>
               <input
                 id="newPassword"
                 type="password"
                 placeholder="Nouveau mot de passe"
-                className="overlay__input"
+                className={`overlay__input ${
+                  errors && errors.newPassword ? "input-error" : ""
+                }`}
                 name="newPassword"
                 onChange={handleChange}
               />
+              {errors && errors.newPassword && (
+                <p className="error-text">{errors && errors.newPassword}</p>
+              )}
             </div>
             <div>
               <label htmlFor="confirmPassword" className="overlay__label">
@@ -179,10 +255,15 @@ const UpdateModal = ({
                 id="confirmPassword"
                 type="password"
                 placeholder="Confirmer le mot de passe"
-                className="overlay__input"
+                className={`overlay__input ${
+                  errors && errors.confirmPassword ? "input-error" : ""
+                }`}
                 name="confirmPassword"
                 onChange={handleChange}
               />
+              {errors && errors.confirmPassword && (
+                <p className="error-text">{errors && errors.confirmPassword}</p>
+              )}
             </div>
             <button type="submit" className="button button__outline">
               Mettre à jour

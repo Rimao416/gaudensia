@@ -68,7 +68,7 @@ function Login() {
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const field = e.target.name; // Déclarer 'field' à partir de e.target.name
-
+console.log(errors)
     setCredentials({ ...credentials, [field]: e.target.value });
 
     // Vérifier et supprimer l'erreur associée au champ
