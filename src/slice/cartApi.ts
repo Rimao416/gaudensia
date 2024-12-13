@@ -28,6 +28,7 @@ export const cartApi = createApi({
   }),
   endpoints: (builder) => ({
     addItemToCart: builder.mutation<AddCartResponse, Partial<CartState>>({
+
       query: (cartItem) => ({
         url: "/cart",
         method: "POST",

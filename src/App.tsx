@@ -6,6 +6,7 @@ import Category from "./pages/Category";
 import Plats from "./pages/Plats";
 import Checkout from "./pages/Checkout";
 import { lazy, Suspense } from "react";
+import Account from "./pages/Account";
 
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
@@ -54,6 +55,8 @@ function App() {
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/menu/:id" element={<Category />} />
       <Route path="/plats/:id" element={<Plats />} />
+      <Route path="/account" element={<Account/>} />
+
     </Routes>
   );
 }

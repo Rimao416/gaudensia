@@ -1,0 +1,109 @@
+.account{
+    padding: $main-padding;
+    &__up{
+        position: relative;
+        width: calc(100% + #{$main-padding * 2}); // Compense les paddings gauche et droite
+        margin-left: -$main-padding; // Annule le padding gauche
+        margin-right: -$main-padding; // Annule le padding droit
+        padding: 0; // Supprime tout padding de cet élément
+        height: 25vh;
+        background-color: $yellow-color;
+        &--text{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: $main-padding;
+            z-index: 100;
+            p{
+                font-size: 14px;
+                line-height: 1.2;
+                &:first-child{
+                    color: #222;
+                }
+                &:last-child{
+                    color: $green-color;
+                    display: none;
+                }
+                
+                
+            }
+        }
+        @include responsive("mobile") {
+            width: calc(100% + #{$respo-padding * 2});
+            margin-left: -$respo-padding;
+            margin-right: -$respo-padding;
+            &--text{
+                padding: $respo-padding;
+                p{
+                    &:last-child{
+                        display: block;
+                    }
+                }
+            }
+            
+
+          }
+    }
+    &__body{
+        margin-top: 18px;
+    }
+}
+.account__body {
+
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  
+    &--title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  
+    &--list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  
+      
+    }
+    &--item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+        div{
+            display: flex;
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+  
+      &--icon {
+        font-size: 20px;
+        color: #555;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+      }
+  
+      &--info {
+        flex: 1;
+        font-size: 16px;
+        color: #333;
+      }
+  
+      &--action {
+        background-color: transparent;
+        border: none;
+        color: $green-color; // Couleur verte
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+  
+        &:hover {
+          text-decoration: none;
+        }
+      }
+  }

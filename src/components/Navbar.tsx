@@ -12,24 +12,23 @@ import MessageDisplay from "./MessageDisplay";
 import BottomSheet from "./BottomSheet";
 import { TfiWorld } from "react-icons/tfi";
 import { IoIosArrowDown } from "react-icons/io";
-import UserInfo from "./UserInfo";
 import { useLanguage } from "../context/useLanguage";
 import i18n from "../i18n";
 import { languages } from "../constants/data";
 import { useAppSelector } from "../store/store";
+import IconList from "./UserInfo";
 function Navbar() {
   const location = useLocation();
   const [isUserToggle, setIsUserToggle] = useState(false);
-const user=useAppSelector((state)=>state.auth.user)
-const { isOverlayVisible, setOverlayVisible } = useOverlay();
+  const user = useAppSelector((state) => state.auth.user);
+  const { isOverlayVisible, setOverlayVisible } = useOverlay();
   const [isSheetOpen, setSheetOpen] = useState(false);
   const { isAuthOverlayVisible, setAuthOverlayVisible } = useAuthOverlay();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  
-  const {language,setLanguage}=useLanguage();
-  console.log(language)
 
+  const { language, setLanguage } = useLanguage();
+  console.log(language);
 
   const handleChange = (selectedOption: { value: string }) => {
     const selectedLanguage = selectedOption.value as "fr" | "en" | "pl";
@@ -116,7 +115,6 @@ const { isOverlayVisible, setOverlayVisible } = useOverlay();
                 <span>
                   <IoIosArrowDown />
                 </span>
-                {isUserToggle && <UserInfo />}
               </div>
             ) : (
               <button
@@ -127,31 +125,32 @@ const { isOverlayVisible, setOverlayVisible } = useOverlay();
               </button>
             )}
             <div className="navigation__icons--wrapper">
-            <div className="navigation__icons--language" onClick={() => setIsLanguageVisible(!isLanguageVisible)}>
-              <span className="navigation__icons--world">
-                <TfiWorld />
-              </span>
-              <p>{language && language.toUpperCase()}</p>
+              <div
+                className="navigation__icons--language"
+                onClick={() => setIsLanguageVisible(!isLanguageVisible)}
+              >
+                <span className="navigation__icons--world">
+                  <TfiWorld />
+                </span>
+                <p>{language && language.toUpperCase()}</p>
 
-
-              <span className="navigation__icons--arrow">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            {isLanguageVisible &&   <div className="dropdown">
-                {languages.map((language) => (
-                  <div
-                    className="navigation__icons--language"
-                    key={language}
-                    onClick={() => handleChange({ value: language })}
-                  >
-                    <p>{language.toUpperCase()}</p>
-                  </div>
-                ))}
-              
-              </div>}
-          
-
+                <span className="navigation__icons--arrow">
+                  <IoIosArrowDown />
+                </span>
+              </div>
+              {isLanguageVisible && (
+                <div className="dropdown">
+                  {languages.map((language) => (
+                    <div
+                      className="navigation__icons--language"
+                      key={language}
+                      onClick={() => handleChange({ value: language })}
+                    >
+                      <p>{language.toUpperCase()}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -193,6 +192,7 @@ const { isOverlayVisible, setOverlayVisible } = useOverlay();
         </BottomSheet>
       )}
       <MessageDisplay />
+      {isUserToggle && <IconList setIsUserToggle={setIsUserToggle} isUserToggle={isUserToggle} />}
     </>
   );
 }
